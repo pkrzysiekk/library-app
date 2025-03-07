@@ -1,0 +1,25 @@
+﻿
+@model Wypozyczalnia.Models.Client
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+			@Html.AntiForgeryToken()
+             <div>
+                <input asp-for="Id" type="hidden" />
+             </div>
+            <div class="form-group">
+                <label class="control-label">Client Name</label>
+                <input asp-for="Name" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Last Name</label>
+                <input asp-for="LastName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Update" />
+            </div>
+        </form>
+    </div>
+</div>
+
+

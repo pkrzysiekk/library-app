@@ -17,6 +17,7 @@ namespace Wypozyczalnia.Controllers
             return View(clients);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var client = await context.Clients.FindAsync(id);

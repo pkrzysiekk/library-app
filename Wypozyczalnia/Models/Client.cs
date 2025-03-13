@@ -7,10 +7,8 @@ namespace Wypozyczalnia.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Last Name is required")]
         public string Name { get; set; }
-        [Required(ErrorMessage = "Last Name is required")]
-
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         public ICollection<Rental>? Rentals { get; set; }

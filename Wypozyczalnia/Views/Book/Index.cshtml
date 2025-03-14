@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Book>
+<div class="container">
+    <h3 class="text-center display-3">
+        List of our books
+    </h3>
+    <table class="table table-striped mt-5">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(Model => Model.Title)</th>
+                <th>@Html.DisplayNameFor(Model => Model.Pages)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        @foreach (var book in Model)
+        {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Pages</td>
+
+                    <td>
+                        <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@book.Id">Edit</a>
+                        <form asp-action="Delete" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@book.Id" />
+                            <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+        }
+    </table>
+</div>

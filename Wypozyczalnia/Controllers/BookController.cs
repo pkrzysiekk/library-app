@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Wypozyczalnia.Data;
 using Wypozyczalnia.Models;
 using Wypozyczalnia.Repository;
@@ -20,22 +21,55 @@ public class BookController : Controller
         return View(books);
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        return View();
+        // Pobieranie dostępnych autorów z repozytorium
+        var authors = await _bookRepository.FetchAvaliableAuthors();
+
+        var viewModel = new BookViewModel
+        {
+            // Przekazanie autorów do widoku w formie SelectListItem
+            AvailableAuthors = authors.Select(a => new SelectListItem
+            {
+                Value = a.Id.ToString(),
+                Text = a.Name
+            }).ToList()
+        };
+
+        return View(viewModel);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Book book)
+    public async Task<IActionResult> Create(BookViewModel model)
     {
         if (ModelState.IsValid)
         {
+            // Pobieramy autorów na podstawie ID
+            var authors = await _bookRepository.GetAuthorsByIdsAsync(model.SelectedAuthors);
+
+            var book = new Book
+            {
+                Title = model.Title,
+                Pages = model.Pages,
+                IsBorrowed = model.IsBorrowed,
+                Authors = (ICollection<Author>)authors // Powiązanie książki z autorami
+            };
+
             await _bookRepository.InsertAsync(book);
             await _bookRepository.SaveAsync();
             return RedirectToAction("Index");
         }
-        return View(book);
+
+        // W przypadku błędów w formularzu, ponownie ładujemy dostępnych autorów
+        var authorsList = await _bookRepository.FetchAvaliableAuthors();
+        model.AvailableAuthors = authorsList.Select(a => new SelectListItem
+        {
+            Value = a.Id.ToString(),
+            Text = a.Name
+        }).ToList();
+
+        return View(model);
     }
 
     public async Task<IActionResult> Edit(int id)
@@ -45,7 +79,7 @@ public class BookController : Controller
         {
             return NotFound();
         }
-        return View(book);
+        return View((book));
     }
 
     [HttpPost]

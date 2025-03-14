@@ -16,7 +16,8 @@ public class BookRepository : IBookRepository, IDisposable
 
     public IQueryable<Book> GetAll()
     {
-        return _context.Books;
+        return _context.Books
+            .Include(b=>b.Authors);
     }
 
     public async Task<Book?> GetByIdAsync(int authorId)
@@ -53,6 +54,12 @@ public class BookRepository : IBookRepository, IDisposable
         await _context.SaveChangesAsync();
     }
 
+    public async Task<IEnumerable<Author>> FetchAvaliableAuthors()
+    {
+        var authors = await _context.Authors.ToListAsync();
+        return authors;
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposed)
@@ -68,5 +75,11 @@ public class BookRepository : IBookRepository, IDisposable
     {
         Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    async Task<IEnumerable<Author>> IBookRepository.GetAuthorsByIdsAsync(List<int> authorsId)
+    {
+        var authors = await _context.Authors.Where(a => authorsId.Contains(a.Id)).ToListAsync();
+        return (ICollection<Author>)authors;
     }
 }

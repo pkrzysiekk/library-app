@@ -17,12 +17,13 @@ public class BookRepository : IBookRepository, IDisposable
     public IQueryable<Book> GetAll()
     {
         return _context.Books
-            .Include(b=>b.Authors);
+            .Include(b => b.Authors);
     }
 
     public async Task<Book?> GetByIdAsync(int authorId)
     {
-        var book = await _context.Books.FindAsync(authorId);
+        var book = await _context.Books
+            .FindAsync(authorId);
         if (book == null)
         {
             return null;
@@ -30,14 +31,77 @@ public class BookRepository : IBookRepository, IDisposable
         return book;
     }
 
+    public List<Author> GetAuthorsFromInput(string str)
+    {
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return new List<Author>();
+        }
+
+        var authorNames = str.Split(',')
+                             .Select(a => a.Trim())
+                             .Where(a => !string.IsNullOrWhiteSpace(a))
+                             .Distinct()
+                             .ToList();
+
+        List<Author> authorsList = new List<Author>();
+
+        foreach (var author in authorNames)
+        {
+            string[] authorData = author.Split(' ');
+            if (authorData.Length < 2) continue;
+
+            string authorName = authorData[0];
+            string authorSurname = string.Join(" ", authorData.Skip(1));
+
+            var existingAuthor = _context.Authors
+                .FirstOrDefault(a => a.Name == authorName && a.LastName == authorSurname);
+
+            if (existingAuthor == null)
+            {
+                var newAuthor = new Author
+                {
+                    Name = authorName,
+                    LastName = authorSurname
+                };
+                _context.Authors.Add(newAuthor);
+                authorsList.Add(newAuthor);
+            }
+            else
+            {
+                authorsList.Add(existingAuthor);
+            }
+        }
+
+        return authorsList;
+    }
+
     public async Task InsertAsync(Book book)
     {
         await _context.Books.AddAsync(book);
     }
 
-    public void UpdateAsync(Book book)
+    public void Update(int id, Book book)
     {
-        _context.Update(book);
+        var existingBook = _context.Books
+            .Include(b => b.Authors)
+            .FirstOrDefault(b => b.Id == id);
+
+        if (existingBook == null) return;
+
+        existingBook.Title = book.Title;
+        existingBook.Pages = book.Pages;
+
+        var newAuthors = book.Authors.ToList();
+
+        existingBook.Authors.Clear();
+        _context.SaveChanges();
+        foreach (var author in newAuthors)
+        {
+            existingBook.Authors.Add(author);
+        }
+
+        _context.SaveChanges();
     }
 
     public async Task DeleteAsync(int bookId)
@@ -52,12 +116,6 @@ public class BookRepository : IBookRepository, IDisposable
     public async Task SaveAsync()
     {
         await _context.SaveChangesAsync();
-    }
-
-    public async Task<IEnumerable<Author>> FetchAvaliableAuthors()
-    {
-        var authors = await _context.Authors.ToListAsync();
-        return authors;
     }
 
     protected virtual void Dispose(bool disposing)
@@ -75,11 +133,5 @@ public class BookRepository : IBookRepository, IDisposable
     {
         Dispose(true);
         GC.SuppressFinalize(this);
-    }
-
-    async Task<IEnumerable<Author>> IBookRepository.GetAuthorsByIdsAsync(List<int> authorsId)
-    {
-        var authors = await _context.Authors.Where(a => authorsId.Contains(a.Id)).ToListAsync();
-        return (ICollection<Author>)authors;
     }
 }

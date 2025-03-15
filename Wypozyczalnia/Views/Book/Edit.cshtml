@@ -1,18 +1,24 @@
-﻿@model Wypozyczalnia.Models.Book
+﻿@model Wypozyczalnia.Models.ViewModels.BookViewModel
+
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" method="post">
             @Html.AntiForgeryToken()
-            <div>
-                <input asp-for="Id" type="hidden" />
-            </div>
             <div class="form-group">
                 <label class="control-label">Book's Name</label>
                 <input asp-for="Title" class="form-control" />
             </div>
+            <div>
+                <input asp-for="BookId" type="hidden" />
+            </div>
             <div class="form-group">
-                <label class="control-label">Book's Last Name</label>
+                <label class="control-label">Pages</label>
                 <input asp-for="Pages" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Authors (comma separated)</label>
+                <input asp-for="Authors" class="form-control" />
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Update" />

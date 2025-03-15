@@ -59,6 +59,7 @@ namespace Wypozyczalnia.Controllers
             {
                 return NotFound();
             }
+
             return View(client);
         }
 

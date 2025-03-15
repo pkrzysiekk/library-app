@@ -1,5 +1,4 @@
-﻿
-@model BookViewModel
+﻿@model Wypozyczalnia.Models.ViewModels.BookViewModel
 
 
 <div class="row">
@@ -15,22 +14,12 @@
                 <input asp-for="Pages" class="form-control" />
             </div>
             <div class="form-group">
-                <label class="control-label">Authors</label>
-                <div>
-                    @foreach (var author in Model.AvailableAuthors)
-                    {
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="SelectedAuthors" value="@author.Value"
-                            checked ="@(Model.SelectedAuthors.Contains(int.Parse(author.Value)) ? "checked" : "")" />
-                            <label class="form-check-label">@author.Text</label>
-                        </div>
-                    }
-                </div>
+                <label class="control-label">Authors (comma separated)</label>
+                <input asp-for="Authors" class="form-control" />
                 </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Create" />
             </div>
- 
         </form>
     </div>
 </div>

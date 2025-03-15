@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Rental>
+<div class="container">
+    <h3 class="text-center display-3">
+        List of our books
+    </h3>
+    <table class="table table-striped mt-5">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(Model => Model.Book)</th>
+                <th>@Html.DisplayNameFor(Model => Model.Client)</th>
+				<th>@Html.DisplayNameFor(Model => Model.RentalDate)</th>
+                <th>@Html.DisplayNameFor(Model => Model.ExpectedReturnDate)</th>
+				<th>@Html.DisplayNameFor(Model => Model.ActualReturnDate)</th>
+				<th>@Html.DisplayNameFor(Model => Model.Charge)</th>
+
+                <th>Action</th>
+            </tr>
+        </thead>
+        @foreach (var book in Model)
+        {
+                <tr>
+                    <td>@book.Book.Title</td>
+                    <td>@($"{book.Client.Name} {book.Client.LastName}")</td>
+                    <td>@book.RentalDate</td>
+				    <td>@book.ExpectedReturnDate</td>
+				    <td>@(book.ActualReturnDate==null ? "Not returned yet" : book.ActualReturnDate)</td>
+                    <td>@book.Charge</td>
+                    <td>
+                        <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@book.Id">Edit</a>
+                        <form asp-action="Delete" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@book.Id" />
+                            <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+        }
+    </table>
+</div>

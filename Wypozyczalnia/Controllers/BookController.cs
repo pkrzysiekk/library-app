@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Wypozyczalnia.Data;
 using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
 
 namespace Wypozyczalnia.Controllers;
@@ -21,22 +23,9 @@ public class BookController : Controller
         return View(books);
     }
 
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
-        // Pobieranie dostępnych autorów z repozytorium
-        var authors = await _bookRepository.FetchAvaliableAuthors();
-
-        var viewModel = new BookViewModel
-        {
-            // Przekazanie autorów do widoku w formie SelectListItem
-            AvailableAuthors = authors.Select(a => new SelectListItem
-            {
-                Value = a.Id.ToString(),
-                Text = a.Name
-            }).ToList()
-        };
-
-        return View(viewModel);
+        return View();
     }
 
     [HttpPost]
@@ -45,30 +34,24 @@ public class BookController : Controller
     {
         if (ModelState.IsValid)
         {
-            // Pobieramy autorów na podstawie ID
-            var authors = await _bookRepository.GetAuthorsByIdsAsync(model.SelectedAuthors);
+            var authors = _bookRepository.GetAuthorsFromInput(model.Authors);
 
+            if (authors.Count == 0)
+            {
+                ModelState.AddModelError("Authors", "Authors are required");
+                return View(model);
+            }
             var book = new Book
             {
                 Title = model.Title,
+                Authors = authors,
                 Pages = model.Pages,
-                IsBorrowed = model.IsBorrowed,
-                Authors = (ICollection<Author>)authors // Powiązanie książki z autorami
             };
-
+            book.Authors = authors;
             await _bookRepository.InsertAsync(book);
             await _bookRepository.SaveAsync();
             return RedirectToAction("Index");
         }
-
-        // W przypadku błędów w formularzu, ponownie ładujemy dostępnych autorów
-        var authorsList = await _bookRepository.FetchAvaliableAuthors();
-        model.AvailableAuthors = authorsList.Select(a => new SelectListItem
-        {
-            Value = a.Id.ToString(),
-            Text = a.Name
-        }).ToList();
-
         return View(model);
     }
 
@@ -79,20 +62,39 @@ public class BookController : Controller
         {
             return NotFound();
         }
-        return View((book));
+        BookViewModel model = new()
+        {
+            BookId = id,
+            Title = book.Title,
+            Pages = book.Pages,
+        };
+        return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Book book)
+    public async Task<IActionResult> Edit(BookViewModel model)
     {
         if (ModelState.IsValid)
         {
-            _bookRepository.UpdateAsync(book);
+            var authors = _bookRepository.GetAuthorsFromInput(model.Authors);
+            if (authors.Count == 0)
+            {
+                ModelState.AddModelError("Authors", "Authors are required");
+                return View(model);
+            }
+            var book = new Book
+            {
+                Title = model.Title,
+                Authors = authors,
+                Pages = model.Pages,
+            };
+            _bookRepository.Update(model.BookId, book);
             await _bookRepository.SaveAsync();
+
             return RedirectToAction("Index");
         }
-        return View(book);
+        return View(model);
     }
 
     public async Task<IActionResult> Delete(int id)

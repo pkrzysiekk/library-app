@@ -10,13 +10,11 @@ public interface IBookRepository
 
     Task InsertAsync(Book book);
 
-    Task<IEnumerable<Author>> FetchAvaliableAuthors();
+    public List<Author> GetAuthorsFromInput(string str);
 
-    void UpdateAsync(Book book);
+    void Update(int id, Book book);
 
     Task DeleteAsync(int bookId);
-
-    Task<IEnumerable<Author>> GetAuthorsByIdsAsync(List<int> authorsId);
 
     Task SaveAsync();
 }

@@ -40,7 +40,12 @@ public class RentalController : Controller
                 ModelState.AddModelError("", "Client or book not found");
                 return View(model);
             }
-
+            if (book.IsBorrowed)
+            {
+                ModelState.AddModelError("", "Book is unavaliable");
+                return View(model);
+            }
+            book.IsBorrowed = true;
             var rental = new Rental
             {
                 BookId = book.Id,
@@ -70,6 +75,9 @@ public class RentalController : Controller
         var model = new RentalViewModel
         {
             Id = rental.Id,
+            ClientName = rental.Client.Name,
+            ClientLastName = rental.Client.LastName,
+            BookTitle = rental.Book.Title,
             RentalDate = rental.RentalDate,
             ExpectedReturnDate = rental.ExpectedReturnDate,
             ActualReturnDate = rental.ActualReturnDate,
@@ -102,10 +110,17 @@ public class RentalController : Controller
                 ActualReturnDate = model.ActualReturnDate,
                 Charge = model.Charge
             };
-            _rentalRepository.Update(rental);
+            await _rentalRepository.Update(model.Id, rental);
             await _rentalRepository.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
         return View(model);
+    }
+
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _rentalRepository.DeleteAsync(id);
+        await _rentalRepository.SaveAsync();
+        return RedirectToAction(nameof(Index));
     }
 }

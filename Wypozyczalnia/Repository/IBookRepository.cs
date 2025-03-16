@@ -1,4 +1,5 @@
-﻿using Wypozyczalnia.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Wypozyczalnia.Models;
 
 namespace Wypozyczalnia.Repository;
 
@@ -15,6 +16,8 @@ public interface IBookRepository
     void Update(int id, Book book);
 
     Task DeleteAsync(int bookId);
+
+    JsonResult Search(string term);
 
     Task SaveAsync();
 }

@@ -22,8 +22,15 @@ public class RentalRepository : IRentalRepository
 
     public async Task<Rental?> GetByIdAsync(int rentalId)
     {
-        return await _context.Rentals
-            .FindAsync(rentalId);
+        var rental = await _context.Rentals
+            .Include(r => r.Book)
+            .Include(r => r.Client)
+            .FirstOrDefaultAsync(r => r.Id == rentalId);
+        if (rental == null)
+        {
+            return null;
+        }
+        return rental;
     }
 
     public async Task InsertAsync(Rental rental)
@@ -31,16 +38,31 @@ public class RentalRepository : IRentalRepository
         await _context.Rentals.AddAsync(rental);
     }
 
-    public void Update(Rental rental)
+    public async Task Update(int id, Rental rental)
     {
-        _context.Rentals.Update(rental);
+        var rentalToUpdate = await _context.Rentals
+            .Include(r => r.Book)
+            .Include(r => r.Client)
+            .FirstOrDefaultAsync(r => r.Id == id);
+        if (rentalToUpdate != null)
+        {
+            rentalToUpdate.ExpectedReturnDate = rental.ExpectedReturnDate;
+            rentalToUpdate.ActualReturnDate = rental.ActualReturnDate;
+            rentalToUpdate.Charge = rental.Charge;
+            rentalToUpdate.Book.IsBorrowed = rentalToUpdate.ActualReturnDate != null ? false : true;
+
+            _context.Rentals.Update(rentalToUpdate);
+        }
     }
 
     public async Task DeleteAsync(int rentalId)
     {
-        var rental = await GetByIdAsync(rentalId);
+        var rental = await _context.Rentals.
+            Include(r => r.Book)
+            .FirstOrDefaultAsync(r => r.Id == rentalId);
         if (rental != null)
         {
+            rental.Book.IsBorrowed = false;
             _context.Rentals.Remove(rental);
         }
     }

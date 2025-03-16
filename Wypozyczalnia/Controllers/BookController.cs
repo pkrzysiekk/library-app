@@ -55,6 +55,12 @@ public class BookController : Controller
         return View(model);
     }
 
+    [HttpGet]
+    public JsonResult SearchAuthor(string term)
+    {
+        return _bookRepository.Search(term);
+    }
+
     public async Task<IActionResult> Edit(int id)
     {
         var book = await _bookRepository.GetByIdAsync(id);

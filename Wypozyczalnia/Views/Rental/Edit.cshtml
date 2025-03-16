@@ -18,24 +18,31 @@
 }
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" method="post">
+        <form asp-action="Edit" method="post">
             @Html.AntiForgeryToken()
+            <div>
+                <input asp-for="Id" type="hidden" />
+            </div>
+            <div>
+                <input asp-for="RentalDate" type="hidden" />
+            </div>
             <div class="form-group">
                 <label class="control-label">Book's Title</label>
-                <input asp-for="BookTitle" class="form-control" />
+                <input asp-for="BookTitle" value="@Model.BookTitle" class="form-control" readonly />
             </div>
             <div class="form-group">
                 <label class="control-label">Client Name</label>
-                <input asp-for="ClientName" class="form-control" />
+                <input asp-for="ClientName" value="@Model.ClientName" class="form-control" readonly />
             </div>
             <div class="form-group">
                 <label class="control-label">Client Last name</label>
-                <input asp-for="ClientLastName" class="form-control" />
+                <input asp-for="ClientLastName" value="@Model.ClientLastName" class="form-control" readonly />
             </div>
             <div class="form-group">
                 <label class="control-label">Expected Return day</label>
                 <input type="date" asp-for="ExpectedReturnDate" class="form-control" />
             </div>
+
             <div class="form-group">
                 <label class="control-label">Returned day</label>
                 <input type="date" asp-for="ActualReturnDate" class="form-control" />
@@ -45,7 +52,7 @@
                 <input asp-for="Charge" class="form-control" />
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Create" />
+                <input type="submit" class="btn btn-primary" value="Edit" />
             </div>
         </form>
     </div>

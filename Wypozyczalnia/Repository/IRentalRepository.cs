@@ -10,7 +10,7 @@ public interface IRentalRepository
 
     Task InsertAsync(Rental rental);
 
-    void Update(Rental rental);
+    Task Update(int id, Rental rental);
 
     Task DeleteAsync(int rentalId);
 

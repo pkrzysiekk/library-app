@@ -1,28 +1,82 @@
 ﻿@model Wypozyczalnia.Models.ViewModels.BookViewModel
 
-
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" method="post">
             @Html.AntiForgeryToken()
+
+            <div>
+                <input asp-for="BookId" type="hidden" />
+            </div>
             <div class="form-group">
                 <label class="control-label">Book's Name</label>
                 <input asp-for="Title" class="form-control" />
-            </div>
-            <div>
-                <input asp-for="BookId" type="hidden" />
             </div>
             <div class="form-group">
                 <label class="control-label">Pages</label>
                 <input asp-for="Pages" class="form-control" />
             </div>
-            <div class="form-group">
-                <label class="control-label">Authors (comma separated)</label>
-                <input asp-for="Authors" class="form-control" />
+            <div class="form-group dropdown">
+                <label>Search for Authors</label>
+                <input type="text" id="searchBox" class="form-control" placeholder="Type here..." autocomplete="off">
+                <ul class="dropdown-menu" id="resultList" style="width: 100%; display: none;"></ul>
             </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Update" />
+            <div class="form-group d-flex flex-column">
+                <input asp-for="Authors" id="authorsInput" class="form-control" readonly />
+                <button class="btn btn-danger remove">Remove authors</button>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" class="btn btn-primary" value="Edit" />
             </div>
         </form>
     </div>
 </div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#searchBox").keyup(function () {
+            let query = $(this).val();
+
+            if (query.length > 1) {
+                $.ajax({
+                    url: '@Url.Action("SearchAuthor", "Book")',
+                    type: "GET",
+                    data: { term: query },
+                    success: function (data) {
+                        let resultList = $("#resultList");
+                        resultList.empty().show();
+
+                        $.each(data, function (i, author) {
+                            resultList.append(`<li class="dropdown-item">${author.name} ${author.lastName}</li>`);
+                        });
+                    }
+                });
+            } else {
+                $("#resultList").hide();
+            }
+        });
+
+        $(document).on("click", ".dropdown-item", function () {
+            let selectedAuthor = $(this).text();
+            let authorsField = $("#authorsInput");
+
+            let currentAuthors = authorsField.val();
+            authorsField.val(currentAuthors ? currentAuthors + ", " + selectedAuthor : selectedAuthor);
+
+            $("#searchBox").val("");
+            $("#resultList").hide();
+        });
+
+        $(document).click(function (e) {
+            if (!$(e.target).closest(".dropdown").length) {
+                $("#resultList").hide();
+            }
+        });
+    });
+    $(document).on("click",".remove",function(){
+        let button=$(this).text();
+        button.val("");
+    });
+</script>

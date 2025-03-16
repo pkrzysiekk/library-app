@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Data;
 using Wypozyczalnia.Models;
 
@@ -29,6 +30,15 @@ public class BookRepository : IBookRepository, IDisposable
             return null;
         }
         return book;
+    }
+
+    public JsonResult Search(string term)
+    {
+        var authors = _context.Authors
+                              .Where(a => a.Name.Contains(term))
+                              .ToList(); // Lista obiektów
+        var json = new JsonResult(authors);// Konwertuje listę do JSON
+        return json;// Konwertuje listę do JSON
     }
 
     public List<Author> GetAuthorsFromInput(string str)

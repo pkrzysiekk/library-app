@@ -32,6 +32,48 @@ public class BookRepository : IBookRepository, IDisposable
         return book;
     }
 
+    public List<Author> GetAuthorsFromInput(string str)
+    {
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return new List<Author>();
+        }
+
+        var authorNames = str.Split(',')
+                             .Select(a => a.Trim())
+                             .Where(a => !string.IsNullOrWhiteSpace(a))
+                             .Distinct()
+                             .ToList();
+
+        List<Author> authorsList = new List<Author>();
+
+        foreach (var author in authorNames)
+        {
+            string[] authorData = author.Split(' ');
+            if (authorData.Length < 2) continue;
+
+            string authorName = authorData[0];
+            string authorSurname = string.Join(" ", authorData.Skip(1));
+
+            var existingAuthor = _context.Authors
+                .FirstOrDefault(a => a.Name == authorName && a.LastName == authorSurname);
+
+            if (existingAuthor == null)
+            {
+                var newAuthor = new Author
+                {
+                    Name = authorName,
+                    LastName = authorSurname
+                };
+                _context.Authors.Add(newAuthor);
+                authorsList.Add(newAuthor);
+            }
+            else
+            {
+                authorsList.Add(existingAuthor);
+            }
+        }
+
     public JsonResult Search(string term)
     {
         var authors = _context.Authors

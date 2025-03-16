@@ -29,7 +29,7 @@ public class RentalRepository : IRentalRepository
         if (rental == null)
         {
             return null;
-        }
+    }
         return rental;
     }
 
@@ -45,7 +45,7 @@ public class RentalRepository : IRentalRepository
             .Include(r => r.Client)
             .FirstOrDefaultAsync(r => r.Id == id);
         if (rentalToUpdate != null)
-        {
+    {
             rentalToUpdate.ExpectedReturnDate = rental.ExpectedReturnDate;
             rentalToUpdate.ActualReturnDate = rental.ActualReturnDate;
             rentalToUpdate.Charge = rental.Charge;

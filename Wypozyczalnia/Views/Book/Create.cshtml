@@ -23,14 +23,13 @@
                 <input asp-for="Authors" id="authorsInput" class="form-control" readonly />
                 <button class="btn btn-danger remove">Remove authors</button>
             </div>
-                
+
             <div class="form-group mt-3">
                 <input type="submit" class="btn btn-primary" value="Create" />
             </div>
         </form>
     </div>
 </div>
-
 
 <script>
     $(document).ready(function () {
@@ -44,7 +43,7 @@
                     data: { term: query },
                     success: function (data) {
                         let resultList = $("#resultList");
-                        resultList.empty().show(); 
+                        resultList.empty().show();
 
                         $.each(data, function (i, author) {
                             resultList.append(`<li class="dropdown-item">${author.name} ${author.lastName}</li>`);
@@ -52,7 +51,7 @@
                     }
                 });
             } else {
-                $("#resultList").hide(); 
+                $("#resultList").hide();
             }
         });
 
@@ -63,8 +62,8 @@
             let currentAuthors = authorsField.val();
             authorsField.val(currentAuthors ? currentAuthors + ", " + selectedAuthor : selectedAuthor);
 
-            $("#searchBox").val(""); 
-            $("#resultList").hide(); 
+            $("#searchBox").val("");
+            $("#resultList").hide();
         });
 
         $(document).click(function (e) {

@@ -6,13 +6,17 @@
             @Html.AntiForgeryToken()
 
             <div class="form-group">
-                <label class="control-label">Book's Name</label>
+                <label class="control-label">@Html.DisplayNameFor(Model=>Model.Title)</label>
                 <input asp-for="Title" class="form-control" />
             </div>
 
             <div class="form-group">
-                <label class="control-label">Pages</label>
+                <label class="control-label">@Html.DisplayNameFor(Model => Model.Pages)</label>
                 <input asp-for="Pages" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">@Html.DisplayNameFor(Model => Model.bookImageLink)</label>
+                <input asp-for="bookImageLink" class="form-control" />
             </div>
             <div class="form-group dropdown">
                 <label>Search for Authors</label>
@@ -33,7 +37,7 @@
 
 <script>
     $(document).ready(function () {
-        $("#searchBox").keyup(function () {
+        $("#searchBox").keyup(function() {
             let query = $(this).val();
 
             if (query.length > 1) {

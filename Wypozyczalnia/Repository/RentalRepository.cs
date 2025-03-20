@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Data;
 using Wypozyczalnia.Models;
 
@@ -29,7 +30,7 @@ public class RentalRepository : IRentalRepository
         if (rental == null)
         {
             return null;
-    }
+        }
         return rental;
     }
 
@@ -45,7 +46,7 @@ public class RentalRepository : IRentalRepository
             .Include(r => r.Client)
             .FirstOrDefaultAsync(r => r.Id == id);
         if (rentalToUpdate != null)
-    {
+        {
             rentalToUpdate.ExpectedReturnDate = rental.ExpectedReturnDate;
             rentalToUpdate.ActualReturnDate = rental.ActualReturnDate;
             rentalToUpdate.Charge = rental.Charge;
@@ -82,5 +83,22 @@ public class RentalRepository : IRentalRepository
     {
         var book = _context.Books.FirstOrDefaultAsync(b => b.Title == title);
         return book;
+    }
+
+    public JsonResult SearchBook(string term)
+    {
+        var books = _context
+            .Books
+            .Where(x => x.IsBorrowed == false
+            && x.Title
+            .StartsWith(term))
+            .Take(10)
+            .ToList();
+        if (books != null)
+        {
+            var json = new JsonResult(books);
+            return json;
+        }
+        return new JsonResult(null);
     }
 }

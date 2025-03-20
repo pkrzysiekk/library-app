@@ -123,4 +123,11 @@ public class RentalController : Controller
         await _rentalRepository.SaveAsync();
         return RedirectToAction(nameof(Index));
     }
+
+    [HttpGet]
+    public JsonResult SearchBook(string term)
+    {
+        var book = _rentalRepository.SearchBook(term);
+        return book;
+    }
 }

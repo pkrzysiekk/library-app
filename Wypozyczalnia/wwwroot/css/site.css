@@ -20,3 +20,7 @@ html {
 body {
     margin-bottom: 60px;
 }
+.book-cover {
+    max-width: 120px;
+    height: auto;
+}

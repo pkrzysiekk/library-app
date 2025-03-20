@@ -46,6 +46,7 @@ public class BookController : Controller
                 Title = model.Title,
                 Authors = authors,
                 Pages = model.Pages,
+                bookImageLink = model.bookImageLink,
             };
             book.Authors = authors;
             await _bookRepository.InsertAsync(book);
@@ -73,6 +74,7 @@ public class BookController : Controller
             BookId = id,
             Title = book.Title,
             Pages = book.Pages,
+            bookImageLink=book.bookImageLink
         };
         return View(model);
     }
@@ -94,6 +96,7 @@ public class BookController : Controller
                 Title = model.Title,
                 Authors = authors,
                 Pages = model.Pages,
+                bookImageLink=model.bookImageLink
             };
             _bookRepository.Update(model.BookId, book);
             await _bookRepository.SaveAsync();

@@ -21,10 +21,10 @@ public class BookRepository : IBookRepository, IDisposable
             .Include(b => b.Authors);
     }
 
-    public async Task<Book?> GetByIdAsync(int authorId)
+    public async Task<Book?> GetByIdAsync(int bookId)
     {
         var book = await _context.Books
-            .FindAsync(authorId);
+            .FindAsync(bookId);
         if (book == null)
         {
             return null;
@@ -36,9 +36,10 @@ public class BookRepository : IBookRepository, IDisposable
     {
         var authors = _context.Authors
                               .Where(a => a.Name.Contains(term))
-                              .ToList(); // Lista obiektów
-        var json = new JsonResult(authors);// Konwertuje listę do JSON
-        return json;// Konwertuje listę do JSON
+                              .Take(10)
+                              .ToList();
+        var json = new JsonResult(authors);
+        return json;
     }
 
     public List<Author> GetAuthorsFromInput(string str)
@@ -61,8 +62,9 @@ public class BookRepository : IBookRepository, IDisposable
             string[] authorData = author.Split(' ');
             if (authorData.Length < 2) continue;
 
-            string authorName = authorData[0];
-            string authorSurname = string.Join(" ", authorData.Skip(1));
+            string authorName = string.Join(" ", authorData.Take(authorData.Length - 1));
+
+            string authorSurname = authorData.Last();
 
             var existingAuthor = _context.Authors
                 .FirstOrDefault(a => a.Name == authorName && a.LastName == authorSurname);
@@ -93,14 +95,14 @@ public class BookRepository : IBookRepository, IDisposable
 
     public void Update(int id, Book book)
     {
-        var existingBook = _context.Books
-            .Include(b => b.Authors)
+        var existingBook = GetAll()
             .FirstOrDefault(b => b.Id == id);
         if (existingBook == null)
             return;
         existingBook.Title = book.Title;
         existingBook.Pages = book.Pages;
         existingBook.Authors = book.Authors;
+        existingBook.bookImageLink = book.bookImageLink;
     }
 
     public async Task DeleteAsync(int bookId)

@@ -19,6 +19,10 @@
                 <label class="control-label">Pages</label>
                 <input asp-for="Pages" class="form-control" />
             </div>
+            <div class="form-group">
+                <label class="control-label">@Html.DisplayNameFor(Model => Model.bookImageLink)</label>
+                <input asp-for="bookImageLink" class="form-control" />
+            </div>
             <div class="form-group dropdown">
                 <label>Search for Authors</label>
                 <input type="text" id="searchBox" class="form-control" placeholder="Type here..." autocomplete="off">

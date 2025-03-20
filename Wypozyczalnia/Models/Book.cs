@@ -11,6 +11,11 @@ namespace Wypozyczalnia.Models
         [Display(Name = "Avaliability")]
         public bool IsBorrowed { get; set; } = false;
 
+        [Url(ErrorMessage = "Invalid Url!")]
+        [Display(Name = "Image")]
+
+        public string bookImageLink { get; set; }
+
         public ICollection<Author> Authors { get; set; } = [];
     }
 }

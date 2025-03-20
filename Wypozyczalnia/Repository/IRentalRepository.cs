@@ -1,4 +1,5 @@
-﻿using Wypozyczalnia.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Wypozyczalnia.Models;
 
 namespace Wypozyczalnia.Repository;
 
@@ -14,6 +15,7 @@ public interface IRentalRepository
 
     Task DeleteAsync(int rentalId);
 
+    JsonResult SearchBook(string str);
     Task<Client?> GetClientByNameAsync(string name, string lastName);
 
     Task<Book?> GetBookByTitleAsync(string title);

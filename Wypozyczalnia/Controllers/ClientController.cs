@@ -2,78 +2,77 @@
 using Wypozyczalnia.Data;
 using Wypozyczalnia.Models;
 
-namespace Wypozyczalnia.Controllers
+namespace Wypozyczalnia.Controllers;
+
+public class ClientController : Controller
 {
-    public class ClientController : Controller
+    private LibraryContext context;
+
+    public ClientController(LibraryContext context)
     {
-        private LibraryContext context;
+        this.context = context;
+    }
 
-        public ClientController(LibraryContext context)
+    public IActionResult Index()
+    {
+        var clients = context.Clients.Select(x => x).ToList();
+        return View(clients);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var client = await context.Clients.FindAsync(id);
+        if (client == null)
         {
-            this.context = context;
+            return NotFound();
         }
+        context.Clients.Remove(client);
+        await context.SaveChangesAsync();
+        return RedirectToAction("Index");
+    }
 
-        public IActionResult Index()
-        {
-            var clients = context.Clients.Select(x => x).ToList();
-            return View(clients);
-        }
+    public IActionResult Create()
+    {
+        return View();
+    }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(
+        [Bind("Name,LastName")] Client client)
+    {
+        if (ModelState.IsValid)
         {
-            var client = await context.Clients.FindAsync(id);
-            if (client == null)
-            {
-                return NotFound();
-            }
-            context.Clients.Remove(client);
+            context.Add(client);
             await context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+        return View(client);
+    }
 
-        public IActionResult Create()
+    public async Task<IActionResult> Edit(int id)
+    {
+        var client = await context.Clients.FindAsync(id);
+        if (client == null)
         {
-            return View();
+            return NotFound();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            [Bind("Name,LastName")] Client client)
-        {
-            if (ModelState.IsValid)
-            {
-                context.Add(client);
-                await context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(client);
-        }
+        return View(client);
+    }
 
-        public async Task<IActionResult> Edit(int id)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Client client)
+    {
+        if (ModelState.IsValid)
         {
-            var client = await context.Clients.FindAsync(id);
-            if (client == null)
-            {
-                return NotFound();
-            }
-
-            return View(client);
+            context.Update(client);
+            await context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Client client)
-        {
-            if (ModelState.IsValid)
-            {
-                context.Update(client);
-                await context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(client);
-        }
+        return View(client);
     }
 }

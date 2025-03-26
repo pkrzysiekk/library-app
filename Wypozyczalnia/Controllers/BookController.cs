@@ -5,21 +5,22 @@ using Wypozyczalnia.Data;
 using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
+using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Controllers;
 
 public class BookController : Controller
 {
-    private IBookRepository _bookRepository;
+    private readonly IBookService _bookService;
 
-    public BookController(LibraryContext context)
+    public BookController(IBookService bookService)
     {
-        _bookRepository = new BookRepository(context);
+        _bookService = bookService;
     }
 
     public IActionResult Index()
     {
-        var books = _bookRepository.GetAll();
+        var books = _bookService.GetAllBooksAsync().Result;
         return View(books);
     }
 
@@ -49,8 +50,7 @@ public class BookController : Controller
                 bookImageLink = model.bookImageLink,
             };
             book.Authors = authors;
-            await _bookRepository.InsertAsync(book);
-            await _bookRepository.SaveAsync();
+            await _bookService.InsertBookAsync(book);
             return RedirectToAction("Index");
         }
         return View(model);
@@ -59,12 +59,12 @@ public class BookController : Controller
     [HttpGet]
     public JsonResult SearchAuthor(string term)
     {
-        return _bookRepository.Search(term);
+        return _bookService.SearchAuthor(term);
     }
 
     public async Task<IActionResult> Edit(int id)
     {
-        var book = await _bookRepository.GetByIdAsync(id);
+        var book = await _bookService.GetBookByIdAsync(id);
         if (book == null)
         {
             return NotFound();
@@ -74,7 +74,7 @@ public class BookController : Controller
             BookId = id,
             Title = book.Title,
             Pages = book.Pages,
-            bookImageLink=book.bookImageLink
+            bookImageLink = book.bookImageLink
         };
         return View(model);
     }
@@ -96,10 +96,9 @@ public class BookController : Controller
                 Title = model.Title,
                 Authors = authors,
                 Pages = model.Pages,
-                bookImageLink=model.bookImageLink
+                bookImageLink = model.bookImageLink
             };
-            _bookRepository.Update(model.BookId, book);
-            await _bookRepository.SaveAsync();
+            await _bookService.UpdateBookAsync(model.BookId, book);
 
             return RedirectToAction("Index");
         }
@@ -108,8 +107,7 @@ public class BookController : Controller
 
     public async Task<IActionResult> Delete(int id)
     {
-        await _bookRepository.DeleteAsync(id);
-        await _bookRepository.SaveAsync();
+        await _bookService.DeleteBookAsync(id);
         return RedirectToAction("Index");
     }
 }

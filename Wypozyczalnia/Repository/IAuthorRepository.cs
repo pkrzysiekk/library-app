@@ -1,19 +1,18 @@
 ﻿using Wypozyczalnia.Models;
 
-namespace Wypozyczalnia.Repository
+namespace Wypozyczalnia.Repository;
+
+public interface IAuthorRepository
 {
-    public interface IAuthorRepository
-    {
-        IQueryable<Author> GetAll();
+    IQueryable<Author> GetAll();
 
-        Author? GetById(int authorId);
+    Author? GetById(int authorId);
 
-        void Insert(Author author);
+    void Insert(Author author);
 
-        void Update(Author author);
+    void Update(Author author);
 
-        void Delete(int authorId);
+    void Delete(int authorId);
 
-        void Save();
-    }
+    void Save();
 }

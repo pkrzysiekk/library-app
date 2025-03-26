@@ -14,6 +14,4 @@ public interface IBookService
     Task UpdateBookAsync(int id, Book book);
 
     Task DeleteBookAsync(int bookId);
-
-    JsonResult SearchAuthor(string term);
 }

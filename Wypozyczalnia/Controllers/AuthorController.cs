@@ -2,21 +2,22 @@
 using Wypozyczalnia.Data;
 using Wypozyczalnia.Models;
 using Wypozyczalnia.Repository;
+using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Controllers;
 
 public class AuthorController : Controller
 {
-    private IAuthorRepository _authorRepository;
+    private IAuthorService _authorService;
 
-    public AuthorController(LibraryContext context)
+    public AuthorController(IAuthorService authorService)
     {
-        _authorRepository = new AuthorRepository(context);
+        _authorService = authorService;
     }
 
     public IActionResult Index()
     {
-        var authors = _authorRepository.GetAll()
+        var authors = _authorService.GetAllAuthors()
             .ToList();
         return View(authors);
     }
@@ -32,8 +33,7 @@ public class AuthorController : Controller
     {
         if (ModelState.IsValid)
         {
-            _authorRepository.Insert(author);
-            _authorRepository.Save();
+            _authorService.InsertAuthor(author);
             return RedirectToAction("Index");
         }
         return View(author);
@@ -41,7 +41,7 @@ public class AuthorController : Controller
 
     public IActionResult Edit(int id)
     {
-        var author = _authorRepository.GetById(id);
+        var author = _authorService.GetAuthorById(id);
         if (author == null)
         {
             return NotFound();
@@ -55,8 +55,7 @@ public class AuthorController : Controller
     {
         if (ModelState.IsValid)
         {
-            _authorRepository.Update(author);
-            _authorRepository.Save();
+            _authorService.UpdateAuthor(author);
             return RedirectToAction("Index");
         }
         return View(author);
@@ -65,8 +64,7 @@ public class AuthorController : Controller
     [HttpPost]
     public IActionResult Delete(int id)
     {
-        _authorRepository.Delete(id);
-        _authorRepository.Save();
+        _authorService.DeleteAuthor(id);
         return RedirectToAction("Index");
     }
 }

@@ -7,9 +7,9 @@ namespace Wypozyczalnia.Services;
 
 public class BookService : IBookService
 {
-    private readonly BookRepository _bookRepository;
+    private readonly IBookRepository _bookRepository;
 
-    public BookService(BookRepository bookRepository)
+    public BookService(IBookRepository bookRepository)
     {
         _bookRepository = bookRepository;
     }
@@ -36,11 +36,6 @@ public class BookService : IBookService
     {
         await _bookRepository.InsertAsync(book);
         await _bookRepository.SaveAsync();
-    }
-
-    public JsonResult SearchAuthor(string term)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task UpdateBookAsync(int id, Book book)

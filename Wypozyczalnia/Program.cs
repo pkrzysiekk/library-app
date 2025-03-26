@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Data;
+using Wypozyczalnia.Repository;
+using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia;
 
@@ -14,6 +16,10 @@ public class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+        builder.Services.AddScoped<IAuthorService, AuthorService>();
+        builder.Services.AddScoped<IBookRepository, BookRepository>();
+        builder.Services.AddScoped<IBookService, BookService>();
 
         var app = builder.Build();
 

@@ -11,13 +11,9 @@ public interface IBookRepository
 
     Task InsertAsync(Book book);
 
-    public List<Author> GetAuthorsFromInput(string str);
-
     void Update(int id, Book book);
 
     Task DeleteAsync(int bookId);
-
-    JsonResult Search(string term);
 
     Task SaveAsync();
 }

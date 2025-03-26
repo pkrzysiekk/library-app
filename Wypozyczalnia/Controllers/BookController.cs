@@ -12,10 +12,12 @@ namespace Wypozyczalnia.Controllers;
 public class BookController : Controller
 {
     private readonly IBookService _bookService;
+    private readonly IAuthorService _authorService;
 
-    public BookController(IBookService bookService)
+    public BookController(IBookService bookService, IAuthorService authorService)
     {
         _bookService = bookService;
+        _authorService = authorService;
     }
 
     public IActionResult Index()
@@ -35,7 +37,7 @@ public class BookController : Controller
     {
         if (ModelState.IsValid)
         {
-            var authors = _bookRepository.GetAuthorsFromInput(model.Authors);
+            var authors = _authorService.GetAuthorsFromInput(model.Authors);
 
             if (authors.Count == 0)
             {
@@ -59,7 +61,7 @@ public class BookController : Controller
     [HttpGet]
     public JsonResult SearchAuthor(string term)
     {
-        return _bookService.SearchAuthor(term);
+        return _authorService.SearchAuthor(term);
     }
 
     public async Task<IActionResult> Edit(int id)
@@ -85,7 +87,7 @@ public class BookController : Controller
     {
         if (ModelState.IsValid)
         {
-            var authors = _bookRepository.GetAuthorsFromInput(model.Authors);
+            var authors = _authorService.GetAuthorsFromInput(model.Authors);
             if (authors.Count == 0)
             {
                 ModelState.AddModelError("Authors", "Authors are required");

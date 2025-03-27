@@ -3,22 +3,24 @@ using Wypozyczalnia.Data;
 using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
+using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Controllers;
 
 public class RentalController : Controller
 {
-    private IRentalRepository _rentalRepository;
+    private readonly IRentalService _rentalService;
+    private readonly IBookService _bookService;
 
-    public RentalController(LibraryContext context)
+    public RentalController(IRentalService rentalService, IBookService bookService)
     {
-        _rentalRepository = new RentalRepository(context);
+        _rentalService = rentalService;
+        _bookService = bookService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var rentals = _rentalRepository.GetAll()
-            .ToList();
+        var rentals = await _rentalService.GetAllRentalsAsync();
         return View(rentals);
     }
 
@@ -33,30 +35,7 @@ public class RentalController : Controller
     {
         if (ModelState.IsValid)
         {
-            var client = await _rentalRepository.GetClientByNameAsync(model.ClientName, model.ClientLastName);
-            var book = await _rentalRepository.GetBookByTitleAsync(model.BookTitle);
-            if (client == null || book == null)
-            {
-                ModelState.AddModelError("", "Client or book not found");
-                return View(model);
-            }
-            if (book.IsBorrowed)
-            {
-                ModelState.AddModelError("", "Book is unavaliable");
-                return View(model);
-            }
-            book.IsBorrowed = true;
-            var rental = new Rental
-            {
-                BookId = book.Id,
-                ClientId = client.Id,
-                RentalDate = DateTime.Now,
-                ExpectedReturnDate = model.ExpectedReturnDate,
-                ActualReturnDate = model.ActualReturnDate,
-                Charge = model.Charge
-            };
-            await _rentalRepository.InsertAsync(rental);
-            await _rentalRepository.SaveAsync();
+            await _rentalService.CreateRentalAsync(model);
             return RedirectToAction(nameof(Index));
         }
         return View(model);
@@ -64,14 +43,9 @@ public class RentalController : Controller
 
     public async Task<IActionResult> Edit(int id)
     {
-        // Pobranie istniejącego wypożyczenia na podstawie ID
-        var rental = await _rentalRepository.GetByIdAsync(id);
-        if (rental == null)
-        {
-            return NotFound();
-        }
+        var rental = await _rentalService.GetRentalByIdAsync(id);
+        if (rental == null) return NotFound();
 
-        // Konwersja do ViewModel
         var model = new RentalViewModel
         {
             Id = rental.Id,
@@ -93,25 +67,7 @@ public class RentalController : Controller
     {
         if (ModelState.IsValid)
         {
-            var Client = await _rentalRepository.GetClientByNameAsync(model.ClientName, model.ClientLastName);
-            var Book = await _rentalRepository.GetBookByTitleAsync(model.BookTitle);
-            if (Client == null || Book == null)
-            {
-                ModelState.AddModelError("", "Client or book not found");
-                return View(model);
-            }
-            var rental = new Rental
-            {
-                Id = model.Id,
-                BookId = Book.Id,
-                ClientId = Client.Id,
-                RentalDate = model.RentalDate,
-                ExpectedReturnDate = model.ExpectedReturnDate,
-                ActualReturnDate = model.ActualReturnDate,
-                Charge = model.Charge
-            };
-            await _rentalRepository.Update(model.Id, rental);
-            await _rentalRepository.SaveAsync();
+            await _rentalService.UpdateRentalAsync(model);
             return RedirectToAction(nameof(Index));
         }
         return View(model);
@@ -119,15 +75,14 @@ public class RentalController : Controller
 
     public async Task<IActionResult> Delete(int id)
     {
-        await _rentalRepository.DeleteAsync(id);
-        await _rentalRepository.SaveAsync();
+        await _rentalService.DeleteRentalAsync(id);
         return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
     public JsonResult SearchBook(string term)
     {
-        var book = _rentalRepository.SearchBook(term);
-        return book;
+        var books = _bookService.SearchBook(term);
+        return Json(books);
     }
 }

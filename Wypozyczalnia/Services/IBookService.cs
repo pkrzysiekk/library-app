@@ -14,4 +14,6 @@ public interface IBookService
     Task UpdateBookAsync(int id, Book book);
 
     Task DeleteBookAsync(int bookId);
+
+    List<Book?> SearchBook(string term);
 }

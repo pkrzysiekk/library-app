@@ -1,21 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Wypozyczalnia.Data;
 using Wypozyczalnia.Models;
-
-namespace Wypozyczalnia.Controllers;
+using Wypozyczalnia.Services;
 
 public class ClientController : Controller
 {
-    private LibraryContext context;
+    private readonly IClientService _clientService;
 
-    public ClientController(LibraryContext context)
+    public ClientController(IClientService clientService)
     {
-        this.context = context;
+        _clientService = clientService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var clients = context.Clients.Select(x => x).ToList();
+        var clients = await _clientService.GetAllClientsAsync();
         return View(clients);
     }
 
@@ -23,13 +21,7 @@ public class ClientController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
-        var client = await context.Clients.FindAsync(id);
-        if (client == null)
-        {
-            return NotFound();
-        }
-        context.Clients.Remove(client);
-        await context.SaveChangesAsync();
+        await _clientService.DeleteClientAsync(id);
         return RedirectToAction("Index");
     }
 
@@ -40,13 +32,11 @@ public class ClientController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(
-        [Bind("Name,LastName")] Client client)
+    public async Task<IActionResult> Create([Bind("Name,LastName")] Client client)
     {
         if (ModelState.IsValid)
         {
-            context.Add(client);
-            await context.SaveChangesAsync();
+            await _clientService.CreateClientAsync(client);
             return RedirectToAction("Index");
         }
         return View(client);
@@ -54,12 +44,8 @@ public class ClientController : Controller
 
     public async Task<IActionResult> Edit(int id)
     {
-        var client = await context.Clients.FindAsync(id);
-        if (client == null)
-        {
-            return NotFound();
-        }
-
+        var client = await _clientService.GetClientByIdAsync(id);
+        if (client == null) return NotFound();
         return View(client);
     }
 
@@ -69,8 +55,7 @@ public class ClientController : Controller
     {
         if (ModelState.IsValid)
         {
-            context.Update(client);
-            await context.SaveChangesAsync();
+            await _clientService.UpdateClientAsync(client);
             return RedirectToAction("Index");
         }
         return View(client);

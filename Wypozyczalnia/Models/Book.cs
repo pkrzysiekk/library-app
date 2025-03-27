@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Wypozyczalnia.Models;
 
@@ -13,7 +14,6 @@ public class Book
 
     [Url(ErrorMessage = "Invalid Url!")]
     [Display(Name = "Image")]
-
     public string bookImageLink { get; set; }
 
     public ICollection<Author> Authors { get; set; } = [];

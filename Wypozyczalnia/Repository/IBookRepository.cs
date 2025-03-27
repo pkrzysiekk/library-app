@@ -5,6 +5,8 @@ namespace Wypozyczalnia.Repository;
 
 public interface IBookRepository
 {
+    IQueryable<Book> GetAllWithRelatedEntities();
+
     IQueryable<Book> GetAll();
 
     Task<Book?> GetByIdAsync(int authorId);

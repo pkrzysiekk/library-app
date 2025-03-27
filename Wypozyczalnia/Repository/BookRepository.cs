@@ -15,10 +15,15 @@ public class BookRepository : IBookRepository, IDisposable
         _context = context;
     }
 
-    public IQueryable<Book> GetAll()
+    public IQueryable<Book> GetAllWithRelatedEntities()
     {
         return _context.Books
             .Include(b => b.Authors);
+    }
+
+    public IQueryable<Book> GetAll()
+    {
+        return _context.Books;
     }
 
     public async Task<Book?> GetByIdAsync(int bookId)
@@ -39,7 +44,7 @@ public class BookRepository : IBookRepository, IDisposable
 
     public void Update(int id, Book book)
     {
-        var existingBook = GetAll()
+        var existingBook = GetAllWithRelatedEntities()
             .FirstOrDefault(b => b.Id == id);
         if (existingBook == null)
             return;

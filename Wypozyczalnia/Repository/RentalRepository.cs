@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Data;
 using Wypozyczalnia.Models;
-
-namespace Wypozyczalnia.Repository;
+using Wypozyczalnia.Repository;
 
 public class RentalRepository : IRentalRepository
 {
@@ -17,88 +15,55 @@ public class RentalRepository : IRentalRepository
     public IQueryable<Rental> GetAll()
     {
         return _context.Rentals
+            .Include(r => r.Client)
             .Include(r => r.Book)
-            .Include(r => r.Client);
+            .AsQueryable();
     }
 
-    public async Task<Rental?> GetByIdAsync(int rentalId)
+    public async Task<Rental?> GetByIdAsync(int id)
     {
-        var rental = await _context.Rentals
-            .Include(r => r.Book)
+        return await _context.Rentals
             .Include(r => r.Client)
-            .FirstOrDefaultAsync(r => r.Id == rentalId);
-        if (rental == null)
-        {
-            return null;
-        }
-        return rental;
+            .Include(r => r.Book)
+            .FirstOrDefaultAsync(r => r.Id == id);
+    }
+
+    public async Task<Client?> GetClientByNameAsync(string name, string lastName)
+    {
+        return await _context.Clients
+            .FirstOrDefaultAsync(c => c.Name == name && c.LastName == lastName);
+    }
+
+    public async Task<Book?> GetBookByTitleAsync(string title)
+    {
+        return await _context.Books
+            .FirstOrDefaultAsync(b => b.Title == title);
     }
 
     public async Task InsertAsync(Rental rental)
     {
-        await _context.Rentals.AddAsync(rental);
+        _context.Rentals.Add(rental);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task Update(int id, Rental rental)
+    public async Task UpdateAsync(Rental rental)
     {
-        var rentalToUpdate = await _context.Rentals
-            .Include(r => r.Book)
-            .Include(r => r.Client)
-            .FirstOrDefaultAsync(r => r.Id == id);
-        if (rentalToUpdate != null)
-        {
-            rentalToUpdate.ExpectedReturnDate = rental.ExpectedReturnDate;
-            rentalToUpdate.ActualReturnDate = rental.ActualReturnDate;
-            rentalToUpdate.Charge = rental.Charge;
-            rentalToUpdate.Book.IsBorrowed = rentalToUpdate.ActualReturnDate != null ? false : true;
-
-            _context.Rentals.Update(rentalToUpdate);
-        }
+        _context.Rentals.Update(rental);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int rentalId)
+    public async Task DeleteAsync(int id)
     {
-        var rental = await _context.Rentals.
-            Include(r => r.Book)
-            .FirstOrDefaultAsync(r => r.Id == rentalId);
+        var rental = await _context.Rentals.FindAsync(id);
         if (rental != null)
         {
-            rental.Book.IsBorrowed = false;
             _context.Rentals.Remove(rental);
+            await _context.SaveChangesAsync();
         }
     }
 
     public async Task SaveAsync()
     {
         await _context.SaveChangesAsync();
-    }
-
-    public async Task<Client?> GetClientByNameAsync(string name, string lastName)
-    {
-        var client = await _context.Clients.FirstOrDefaultAsync(c => c.Name == name && c.LastName == lastName);
-        return client;
-    }
-
-    public Task<Book?> GetBookByTitleAsync(string title)
-    {
-        var book = _context.Books.FirstOrDefaultAsync(b => b.Title == title);
-        return book;
-    }
-
-    public JsonResult SearchBook(string term)
-    {
-        var books = _context
-            .Books
-            .Where(x => x.IsBorrowed == false
-            && x.Title
-            .StartsWith(term))
-            .Take(10)
-            .ToList();
-        if (books != null)
-        {
-            var json = new JsonResult(books);
-            return json;
-        }
-        return new JsonResult(null);
     }
 }

@@ -22,7 +22,7 @@ public class BookService : IBookService
 
     public async Task<IEnumerable<Book>> GetAllBooksAsync()
     {
-        var books = await _bookRepository.GetAll().ToListAsync();
+        var books = await _bookRepository.GetAllWithRelatedEntities().ToListAsync();
         return books;
     }
 
@@ -42,5 +42,13 @@ public class BookService : IBookService
     {
         _bookRepository.Update(id, book);
         await _bookRepository.SaveAsync();
+    }
+
+    public List<Book?> SearchBook(string term)
+    {
+        var searchResult = _bookRepository.GetAll()
+            .Where(b => b.Title.Contains(term) && !b.IsBorrowed)
+            .ToList();
+        return searchResult;
     }
 }

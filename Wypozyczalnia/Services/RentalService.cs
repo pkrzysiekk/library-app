@@ -1,8 +1,7 @@
-﻿using Wypozyczalnia.Models.ViewModels;
+﻿using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Wypozyczalnia.Services;
 

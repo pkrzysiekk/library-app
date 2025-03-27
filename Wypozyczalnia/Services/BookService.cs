@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
 
 namespace Wypozyczalnia.Services;
@@ -8,10 +9,12 @@ namespace Wypozyczalnia.Services;
 public class BookService : IBookService
 {
     private readonly IBookRepository _bookRepository;
+    private readonly IAuthorService _authorService;
 
-    public BookService(IBookRepository bookRepository)
+    public BookService(IBookRepository bookRepository, IAuthorService authorService)
     {
         _bookRepository = bookRepository;
+        _authorService = authorService;
     }
 
     public async Task DeleteBookAsync(int bookId)
@@ -20,9 +23,10 @@ public class BookService : IBookService
         await _bookRepository.SaveAsync();
     }
 
-    public async Task<IEnumerable<Book>> GetAllBooksAsync()
+    public IQueryable<Book> GetAllBooks()
     {
-        var books = await _bookRepository.GetAllWithRelatedEntities().ToListAsync();
+        var books = _bookRepository
+            .GetAllWithRelatedEntities();
         return books;
     }
 
@@ -32,22 +36,49 @@ public class BookService : IBookService
         return book;
     }
 
-    public async Task InsertBookAsync(Book book)
+    public async Task InsertBookAsync(BookViewModel model)
     {
+        var authors = _authorService.GetAuthorsFromInput(model.Authors);
+        if (authors.Count == 0)
+        {
+            throw new Exception("Authors are required");
+        }
+        var book = new Book
+        {
+            Title = model.Title,
+            Authors = authors,
+            Pages = model.Pages,
+            bookImageLink = model.bookImageLink
+        };
+        book.Authors = authors;
         await _bookRepository.InsertAsync(book);
         await _bookRepository.SaveAsync();
     }
 
-    public async Task UpdateBookAsync(int id, Book book)
+    public async Task UpdateBookAsync(BookViewModel model)
     {
-        _bookRepository.Update(id, book);
+        var authors = _authorService.GetAuthorsFromInput(model.Authors);
+        if (authors.Count == 0)
+        {
+            throw new Exception("Authors are required");
+        }
+        var book = new Book
+        {
+            Title = model.Title,
+            Authors = authors,
+            Pages = model.Pages,
+            bookImageLink = model.bookImageLink
+        };
+        book.Authors = authors;
+        _bookRepository.Update(model.BookId, book);
         await _bookRepository.SaveAsync();
     }
 
-    public List<Book?> SearchBook(string term)
+    public List<Book>? SearchBook(string term)
     {
         var searchResult = _bookRepository.GetAll()
             .Where(b => b.Title.Contains(term) && !b.IsBorrowed)
+            .Take(10)
             .ToList();
         return searchResult;
     }

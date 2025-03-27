@@ -17,5 +17,5 @@ public interface IAuthorService
 
     List<Author> GetAuthorsFromInput(string str);
 
-    JsonResult SearchAuthor(string term);
+    Task<JsonResult> SearchAuthor(string term);
 }

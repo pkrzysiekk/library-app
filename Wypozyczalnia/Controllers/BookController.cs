@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Wypozyczalnia.Data;
-using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
-using Wypozyczalnia.Repository;
 using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Controllers;
@@ -22,7 +17,7 @@ public class BookController : Controller
 
     public IActionResult Index()
     {
-        var books = _bookService.GetAllBooksAsync().Result;
+        var books = _bookService.GetAllBooks();
         return View(books);
     }
 
@@ -35,33 +30,24 @@ public class BookController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(BookViewModel model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
+            return View(model);
+        try
         {
-            var authors = _authorService.GetAuthorsFromInput(model.Authors);
-
-            if (authors.Count == 0)
-            {
-                ModelState.AddModelError("Authors", "Authors are required");
-                return View(model);
-            }
-            var book = new Book
-            {
-                Title = model.Title,
-                Authors = authors,
-                Pages = model.Pages,
-                bookImageLink = model.bookImageLink,
-            };
-            book.Authors = authors;
-            await _bookService.InsertBookAsync(book);
-            return RedirectToAction("Index");
+            await _bookService.InsertBookAsync(model);
         }
-        return View(model);
+        catch (Exception e)
+        {
+            ModelState.AddModelError("", e.Message);
+            return View(model);
+        }
+        return RedirectToAction("Index");
     }
 
     [HttpGet]
-    public JsonResult SearchAuthor(string term)
+    public async Task<JsonResult> SearchAuthor(string term)
     {
-        return _authorService.SearchAuthor(term);
+        return await _authorService.SearchAuthor(term);
     }
 
     public async Task<IActionResult> Edit(int id)
@@ -85,31 +71,31 @@ public class BookController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(BookViewModel model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
+            return View(model);
+        try
         {
-            var authors = _authorService.GetAuthorsFromInput(model.Authors);
-            if (authors.Count == 0)
-            {
-                ModelState.AddModelError("Authors", "Authors are required");
-                return View(model);
-            }
-            var book = new Book
-            {
-                Title = model.Title,
-                Authors = authors,
-                Pages = model.Pages,
-                bookImageLink = model.bookImageLink
-            };
-            await _bookService.UpdateBookAsync(model.BookId, book);
-
-            return RedirectToAction("Index");
+            await _bookService.UpdateBookAsync(model);
         }
-        return View(model);
+        catch (Exception e)
+        {
+            ModelState.AddModelError("", e.Message);
+            return View(model);
+        }
+
+        return RedirectToAction("Index");
     }
 
     public async Task<IActionResult> Delete(int id)
     {
-        await _bookService.DeleteBookAsync(id);
+        try
+        {
+            await _bookService.DeleteBookAsync(id);
+        }
+        catch (Exception e)
+        {
+            ModelState.AddModelError("", e.Message);
+        }
         return RedirectToAction("Index");
     }
 }

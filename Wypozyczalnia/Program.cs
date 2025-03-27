@@ -16,12 +16,16 @@ public class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
         builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
         builder.Services.AddScoped<IAuthorService, AuthorService>();
+
         builder.Services.AddScoped<IBookRepository, BookRepository>();
         builder.Services.AddScoped<IBookService, BookService>();
+
         builder.Services.AddScoped<IClientRepository, ClientRepository>();
         builder.Services.AddScoped<IClientService, ClientService>();
+
         builder.Services.AddScoped<IRentalRepository, RentalRepository>();
         builder.Services.AddScoped<IRentalService, RentalService>();
         var app = builder.Build();

@@ -1,5 +1,5 @@
-﻿using Wypozyczalnia.Models.ViewModels;
-using Wypozyczalnia.Models;
+﻿using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 
 namespace Wypozyczalnia.Services;
 

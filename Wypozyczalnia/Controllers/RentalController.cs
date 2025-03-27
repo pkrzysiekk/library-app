@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Wypozyczalnia.Data;
-using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
-using Wypozyczalnia.Repository;
 using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Controllers;

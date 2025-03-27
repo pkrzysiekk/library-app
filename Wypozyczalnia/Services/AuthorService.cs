@@ -88,12 +88,12 @@ public class AuthorService : IAuthorService
         return authorsList;
     }
 
-    public JsonResult SearchAuthor(string term)
+    public async Task<JsonResult> SearchAuthor(string term)
     {
-        var authors = _authorRepository.GetAll()
+        var authors = await _authorRepository.GetAll()
                               .Where(a => a.Name.Contains(term))
                               .Take(10)
-                              .ToList();
+                              .ToListAsync();
         var json = new JsonResult(authors);
         return json;
     }

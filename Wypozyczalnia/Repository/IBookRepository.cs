@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Wypozyczalnia.Models;
+﻿using Wypozyczalnia.Models;
 
 namespace Wypozyczalnia.Repository;
 

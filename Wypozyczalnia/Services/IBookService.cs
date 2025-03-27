@@ -1,19 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Wypozyczalnia.Models;
+﻿using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 
 namespace Wypozyczalnia.Services;
 
 public interface IBookService
 {
-    Task<IEnumerable<Book>> GetAllBooksAsync();
+    IQueryable<Book> GetAllBooks();
 
     Task<Book?> GetBookByIdAsync(int bookId);
 
-    Task InsertBookAsync(Book book);
+    Task InsertBookAsync(BookViewModel model);
 
-    Task UpdateBookAsync(int id, Book book);
+    Task UpdateBookAsync(BookViewModel model);
 
     Task DeleteBookAsync(int bookId);
 
-    List<Book?> SearchBook(string term);
+    List<Book>? SearchBook(string term);
 }

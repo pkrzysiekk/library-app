@@ -1,5 +1,15 @@
 ﻿@model Wypozyczalnia.Models.ViewModels.BookViewModel
-
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" method="post">

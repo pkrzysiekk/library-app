@@ -14,4 +14,31 @@ public class RentalViewModel
     public DateTime? ActualReturnDate { get; set; }
 
     public Decimal? Charge { get; set; }
+
+    public Rental ConvertToModel()
+    {
+        return new Rental
+        {
+            Id = Id,
+            RentalDate = RentalDate,
+            ExpectedReturnDate = ExpectedReturnDate,
+            ActualReturnDate = ActualReturnDate,
+            Charge = Charge
+        };
+    }
+
+    public static RentalViewModel ConvertToViewModel(Rental rental)
+    {
+        return new RentalViewModel
+        {
+            Id = rental.Id,
+            BookTitle = rental.Book?.Title,
+            ClientName = rental.Client?.Name,
+            ClientLastName = rental.Client?.LastName,
+            RentalDate = rental.RentalDate,
+            ExpectedReturnDate = rental.ExpectedReturnDate,
+            ActualReturnDate = rental.ActualReturnDate,
+            Charge = rental.Charge
+        };
+    }
 }

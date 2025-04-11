@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 
 namespace Wypozyczalnia.Controllers;
 

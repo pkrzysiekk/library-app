@@ -36,21 +36,22 @@ public class BookService : IBookService
         return book;
     }
 
-    public async Task InsertBookAsync(BookViewModel model)
+    private List<Author> ValidateAndGetAuthors(string authorsInput)
     {
-        var authors = _authorService.GetAuthorsFromInput(model.Authors);
+        var authors = _authorService.GetAuthorsFromInput(authorsInput);
         if (authors.Count == 0)
         {
             throw new Exception("Authors are required");
         }
-        var book = new Book
-        {
-            Title = model.Title,
-            Authors = authors,
-            Pages = model.Pages,
-            bookImageLink = model.bookImageLink
-        };
+        return authors;
+    }
+
+    public async Task InsertBookAsync(BookViewModel model)
+    {
+        var authors = ValidateAndGetAuthors(model.Authors);
+        var book = model.ConvertToModel();
         book.Authors = authors;
+
         await _bookRepository.InsertAsync(book);
         await _bookRepository.SaveAsync();
     }
@@ -62,13 +63,7 @@ public class BookService : IBookService
         {
             throw new Exception("Authors are required");
         }
-        var book = new Book
-        {
-            Title = model.Title,
-            Authors = authors,
-            Pages = model.Pages,
-            bookImageLink = model.bookImageLink
-        };
+        var book = model.ConvertToModel();
         book.Authors = authors;
         _bookRepository.Update(model.BookId, book);
         await _bookRepository.SaveAsync();

@@ -1,4 +1,4 @@
-namespace Wypozyczalnia.Models;
+namespace Wypozyczalnia.Models.ViewModels;
 
 public class ErrorViewModel
 {

@@ -57,13 +57,7 @@ public class BookController : Controller
         {
             return NotFound();
         }
-        BookViewModel model = new()
-        {
-            BookId = id,
-            Title = book.Title,
-            Pages = book.Pages,
-            bookImageLink = book.bookImageLink
-        };
+        var model = BookViewModel.ConvertToViewModel(book);
         return View(model);
     }
 

@@ -1,7 +1,10 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Data;
+using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
 using Wypozyczalnia.Services;
+using Wypozyczalnia.Validators;
 
 namespace Wypozyczalnia;
 
@@ -28,6 +31,8 @@ public class Program
 
         builder.Services.AddScoped<IRentalRepository, RentalRepository>();
         builder.Services.AddScoped<IRentalService, RentalService>();
+
+        builder.Services.AddScoped<IValidator<RentalViewModel>, RentalValidator>();
         var app = builder.Build();
 
         using (var scope = app.Services.CreateScope())

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Services;
 
@@ -8,11 +9,13 @@ public class RentalController : Controller
 {
     private readonly IRentalService _rentalService;
     private readonly IBookService _bookService;
+    private readonly IValidator<RentalViewModel> _validator;
 
-    public RentalController(IRentalService rentalService, IBookService bookService)
+    public RentalController(IRentalService rentalService, IBookService bookService, IValidator<RentalViewModel> validator)
     {
         _rentalService = rentalService;
         _bookService = bookService;
+        _validator = validator;
     }
 
     public async Task<IActionResult> Index()
@@ -30,12 +33,19 @@ public class RentalController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(RentalViewModel model)
     {
-        if (ModelState.IsValid)
+        var validationResult = await _validator.ValidateAsync(model);
+
+        if (!validationResult.IsValid)
         {
-            await _rentalService.CreateRentalAsync(model);
-            return RedirectToAction(nameof(Index));
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.ErrorMessage);
+            }
+            return View(model);
         }
-        return View(model);
+
+        await _rentalService.CreateRentalAsync(model);
+        return RedirectToAction(nameof(Index));
     }
 
     public async Task<IActionResult> Edit(int id)
@@ -52,12 +62,17 @@ public class RentalController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(RentalViewModel model)
     {
-        if (ModelState.IsValid)
+        var validationResult = await _validator.ValidateAsync(model);
+
+        if (!validationResult.IsValid)
         {
-            await _rentalService.UpdateRentalAsync(model);
-            return RedirectToAction(nameof(Index));
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.ErrorMessage);
+            }
+            return View(model);
         }
-        return View(model);
+        return RedirectToAction(nameof(Index));
     }
 
     public async Task<IActionResult> Delete(int id)

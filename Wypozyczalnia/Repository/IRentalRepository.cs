@@ -1,4 +1,5 @@
 ﻿using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 
 namespace Wypozyczalnia.Repository;
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
@@ -26,51 +27,27 @@ public class RentalService : IRentalService
 
     public async Task CreateRentalAsync(RentalViewModel model)
     {
-        var client = await _rentalRepository.GetClientByNameAsync(model.ClientName, model.ClientLastName);
-        var book = await _rentalRepository.GetBookByTitleAsync(model.BookTitle);
-
-        if (client == null || book == null || book.IsBorrowed)
+        var rental = await GetValidatedRental(model);
+        if (rental == null)
         {
             return;
         }
-
-        book.IsBorrowed = true;
-        var rental = new Rental
-        {
-            BookId = book.Id,
-            ClientId = client.Id,
-            RentalDate = DateTime.Now,
-            ExpectedReturnDate = model.ExpectedReturnDate,
-            ActualReturnDate = model.ActualReturnDate,
-            Charge = model.Charge
-        };
-
+        rental.Book.IsBorrowed = true;
+        rental.RentalDate = DateTime.Now;
         await _rentalRepository.InsertAsync(rental);
     }
 
     public async Task UpdateRentalAsync(RentalViewModel model)
     {
-        var client = await _rentalRepository.GetClientByNameAsync(model.ClientName, model.ClientLastName);
-        var book = await _rentalRepository.GetBookByTitleAsync(model.BookTitle);
+        var rental = await GetValidatedRental(model);
 
-        if (client == null || book == null)
+        if (rental == null)
         {
             return;
         }
-
-        var rental = new Rental
-        {
-            Id = model.Id,
-            BookId = book.Id,
-            ClientId = client.Id,
-            RentalDate = model.RentalDate,
-            ExpectedReturnDate = model.ExpectedReturnDate,
-            ActualReturnDate = model.ActualReturnDate,
-            Charge = model.Charge
-        };
         if (rental.ActualReturnDate != null)
         {
-            book.IsBorrowed = false;
+            rental.Book.IsBorrowed = false;
         }
         await _rentalRepository.UpdateAsync(rental);
     }
@@ -84,5 +61,21 @@ public class RentalService : IRentalService
         }
         rental.Book.IsBorrowed = false;
         await _rentalRepository.DeleteAsync(id);
+    }
+
+    private async Task<Rental?> GetValidatedRental(RentalViewModel model)
+    {
+        var client = await _rentalRepository.GetClientByNameAsync(model.ClientName, model.ClientLastName);
+        var book = await _rentalRepository.GetBookByTitleAsync(model.BookTitle);
+
+        if (client == null || book == null)
+        {
+            return null;
+        }
+
+        var rental = model.ConvertToModel();
+        rental.Client = client;
+        rental.Book = book;
+        return rental;
     }
 }

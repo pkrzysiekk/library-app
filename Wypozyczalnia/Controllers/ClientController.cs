@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Services;
 
 public class ClientController : Controller
@@ -32,32 +33,34 @@ public class ClientController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Name,LastName")] Client client)
+    public async Task<IActionResult> Create(ClientViewModel model)
     {
         if (ModelState.IsValid)
         {
-            await _clientService.CreateClientAsync(client);
+            await _clientService.CreateClientAsync(model);
             return RedirectToAction("Index");
         }
-        return View(client);
+        return View(model);
     }
 
     public async Task<IActionResult> Edit(int id)
     {
         var client = await _clientService.GetClientByIdAsync(id);
         if (client == null) return NotFound();
-        return View(client);
+
+        var model = ClientViewModel.ConvertToViewModel(client);
+        return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Client client)
+    public async Task<IActionResult> Edit(ClientViewModel model)
     {
         if (ModelState.IsValid)
         {
-            await _clientService.UpdateClientAsync(client);
+            await _clientService.UpdateClientAsync(model);
             return RedirectToAction("Index");
         }
-        return View(client);
+        return View(model);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 
 namespace Wypozyczalnia.Services;
 
@@ -9,9 +10,9 @@ public interface IAuthorService
 
     Author? GetAuthorById(int authorId);
 
-    void InsertAuthor(Author author);
+    void InsertAuthor(AuthorViewModel model);
 
-    void UpdateAuthor(Author author);
+    void UpdateAuthor(AuthorViewModel model);
 
     void DeleteAuthor(int authorId);
 

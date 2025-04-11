@@ -1,4 +1,5 @@
 ﻿using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 
 namespace Wypozyczalnia.Services;
 
@@ -8,9 +9,9 @@ public interface IClientService
 
     Task<Client?> GetClientByIdAsync(int id);
 
-    Task CreateClientAsync(Client client);
+    Task CreateClientAsync(ClientViewModel model);
 
-    Task UpdateClientAsync(Client client);
+    Task UpdateClientAsync(ClientViewModel model);
 
     Task DeleteClientAsync(int id);
 }

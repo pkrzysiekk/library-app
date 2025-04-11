@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
 
 namespace Wypozyczalnia.Services;
@@ -24,14 +25,16 @@ public class AuthorService : IAuthorService
         return _authorRepository.GetById(authorId);
     }
 
-    public void InsertAuthor(Author author)
+    public void InsertAuthor(AuthorViewModel model)
     {
+        var author = model.ConvertToModel();
         _authorRepository.Insert(author);
         _authorRepository.Save();
     }
 
-    public void UpdateAuthor(Author author)
+    public void UpdateAuthor(AuthorViewModel model)
     {
+        var author = model.ConvertToModel();
         _authorRepository.Update(author);
         _authorRepository.Save();
     }

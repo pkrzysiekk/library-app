@@ -43,17 +43,7 @@ public class RentalController : Controller
         var rental = await _rentalService.GetRentalByIdAsync(id);
         if (rental == null) return NotFound();
 
-        var model = new RentalViewModel
-        {
-            Id = rental.Id,
-            ClientName = rental.Client.Name,
-            ClientLastName = rental.Client.LastName,
-            BookTitle = rental.Book.Title,
-            RentalDate = rental.RentalDate,
-            ExpectedReturnDate = rental.ExpectedReturnDate,
-            ActualReturnDate = rental.ActualReturnDate,
-            Charge = rental.Charge
-        };
+        var model = RentalViewModel.ConvertToViewModel(rental);
 
         return View(model);
     }

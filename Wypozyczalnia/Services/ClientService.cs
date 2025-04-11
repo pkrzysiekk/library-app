@@ -1,4 +1,6 @@
-﻿using Wypozyczalnia.Models;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
 
 namespace Wypozyczalnia.Services;
@@ -22,18 +24,20 @@ public class ClientService : IClientService
         return await _clientRepository.GetByIdAsync(id);
     }
 
-    public async Task CreateClientAsync(Client client)
+    public async Task CreateClientAsync(ClientViewModel model)
     {
-        if (client != null)
+        if (model != null)
         {
+            var client = model.ConvertToModel();
             await _clientRepository.AddAsync(client);
         }
     }
 
-    public async Task UpdateClientAsync(Client client)
+    public async Task UpdateClientAsync(ClientViewModel model)
     {
-        if (client != null)
+        if (model != null)
         {
+            var client = model.ConvertToModel();
             await _clientRepository.UpdateAsync(client);
         }
     }

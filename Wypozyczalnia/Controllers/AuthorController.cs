@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Wypozyczalnia.Models;
+using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Controllers;
@@ -27,14 +28,14 @@ public class AuthorController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Author author)
+    public IActionResult Create(AuthorViewModel model)
     {
         if (ModelState.IsValid)
         {
-            _authorService.InsertAuthor(author);
+            _authorService.InsertAuthor(model);
             return RedirectToAction("Index");
         }
-        return View(author);
+        return View(model);
     }
 
     public IActionResult Edit(int id)
@@ -44,19 +45,20 @@ public class AuthorController : Controller
         {
             return NotFound();
         }
-        return View(author);
+        var model = AuthorViewModel.ConvertToViewModel(author);
+        return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(Author author)
+    public IActionResult Edit(AuthorViewModel model)
     {
         if (ModelState.IsValid)
         {
-            _authorService.UpdateAuthor(author);
+            _authorService.UpdateAuthor(model);
             return RedirectToAction("Index");
         }
-        return View(author);
+        return View(model);
     }
 
     [HttpPost]

@@ -5,17 +5,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model Wypozyczalnia.Models.ViewModels.RentalViewModel
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        <ul>
-            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {
-                <li>@error.ErrorMessage</li>
-            }
-        </ul>
-    </div>
-}
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" method="post">
@@ -25,31 +15,39 @@
             </div>
             <div>
                 <input asp-for="RentalDate" type="hidden" />
+				<span asp-validation-for="RentalDate" class="text-danger"></span>
+
             </div>
             <div class="form-group">
                 <label class="control-label">Book's Title</label>
                 <input asp-for="BookTitle" value="@Model.BookTitle" class="form-control" readonly />
+				<span asp-validation-for="BookTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Client Name</label>
                 <input asp-for="ClientName" value="@Model.ClientName" class="form-control" readonly />
+				<span asp-validation-for="ClientName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Client Last name</label>
                 <input asp-for="ClientLastName" value="@Model.ClientLastName" class="form-control" readonly />
+				<span asp-validation-for="ClientLastName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Expected Return day</label>
                 <input type="date" asp-for="ExpectedReturnDate" class="form-control" />
+				<span asp-validation-for="ExpectedReturnDate" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label class="control-label">Returned day</label>
                 <input type="date" asp-for="ActualReturnDate" class="form-control" />
+				<span asp-validation-for="ActualReturnDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Charge</label>
                 <input asp-for="Charge" class="form-control" />
+				<span asp-validation-for="Charge" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Edit" />

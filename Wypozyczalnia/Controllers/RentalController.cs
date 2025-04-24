@@ -11,7 +11,9 @@ public class RentalController : Controller
     private readonly IBookService _bookService;
     private readonly IValidator<RentalViewModel> _validator;
 
-    public RentalController(IRentalService rentalService, IBookService bookService, IValidator<RentalViewModel> validator)
+    public RentalController(IRentalService rentalService,
+        IBookService bookService,
+        IValidator<RentalViewModel> validator)
     {
         _rentalService = rentalService;
         _bookService = bookService;
@@ -39,7 +41,7 @@ public class RentalController : Controller
         {
             foreach (var error in validationResult.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.ErrorMessage);
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
             }
             return View(model);
         }
@@ -68,7 +70,7 @@ public class RentalController : Controller
         {
             foreach (var error in validationResult.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.ErrorMessage);
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
             }
             return View(model);
         }

@@ -5,6 +5,8 @@ using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
 using Wypozyczalnia.Services;
 using Wypozyczalnia.Validators;
+using Mapster;
+using Wypozyczalnia.Models;
 
 namespace Wypozyczalnia;
 
@@ -33,6 +35,11 @@ public class Program
         builder.Services.AddScoped<IRentalService, RentalService>();
 
         builder.Services.AddScoped<IValidator<RentalViewModel>, RentalValidator>();
+
+        builder.Services.AddMapster();
+
+        MapsterConfig.RegisterMappings();
+
         var app = builder.Build();
 
         using (var scope = app.Services.CreateScope())

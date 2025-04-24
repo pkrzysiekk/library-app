@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mapster;
+using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
 using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Services;
@@ -8,10 +10,12 @@ namespace Wypozyczalnia.Controllers;
 public class AuthorController : Controller
 {
     private IAuthorService _authorService;
+    private readonly IMapper _mapper;
 
-    public AuthorController(IAuthorService authorService)
+    public AuthorController(IAuthorService authorService, IMapper mapper)
     {
         _authorService = authorService;
+        _mapper = mapper;
     }
 
     public IActionResult Index()
@@ -45,7 +49,9 @@ public class AuthorController : Controller
         {
             return NotFound();
         }
-        var model = AuthorViewModel.ConvertToViewModel(author);
+        // var model = AuthorViewModel.ConvertToViewModel(author);
+        //var model = author.Adapt<AuthorViewModel>();
+        var model = _mapper.Map<AuthorViewModel>(author);
         return View(model);
     }
 

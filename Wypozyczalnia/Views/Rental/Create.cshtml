@@ -2,17 +2,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model Wypozyczalnia.Models.ViewModels.RentalViewModel
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        <ul>
-            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {
-                <li>@error.ErrorMessage</li>
-            }
-        </ul>
-    </div>
-}
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" method="post">
@@ -21,24 +11,30 @@
                 <div class="form-group dropdown">
                     <label>Search for Book</label>
                     <input asp-for=BookTitle type="text" id="searchBox" class="form-control" placeholder="Type here..." autocomplete="off">
+                    <span asp-validation-for="BookTitle" class="text-danger"></span>
+
                     <ul class="dropdown-menu" id="resultList" style="width: 100%; display: none;"></ul>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label">Client Name</label>
                 <input asp-for="ClientName" class="form-control" />
+                <span asp-validation-for="ClientName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Client Last name</label>
                 <input asp-for="ClientLastName" class="form-control" />
+				<span asp-validation-for="ClientLastName" class="text-danger"></span>
             </div>
 			<div class="form-group">
 				<label class="control-label">Return day</label>
 				<input type="date" asp-for="ExpectedReturnDate" class="form-control" />
+				<span asp-validation-for="ExpectedReturnDate" class="text-danger"></span>
              </div>
             <div class="form-group">
                 <label class="control-label">Charge</label>
                 <input asp-for="Charge" class="form-control" />
+				<span asp-validation-for="Charge" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Create" />

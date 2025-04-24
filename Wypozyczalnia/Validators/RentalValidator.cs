@@ -18,9 +18,10 @@ public class RentalValidator : AbstractValidator<RentalViewModel>
             .Length(2, 50)
             .WithMessage("Client last name must be between 2 and 50 characters.");
         RuleFor(r => r.ExpectedReturnDate)
-            .NotEmpty()
+            .NotEmpty() 
             .WithMessage("Return date is required.")
             .GreaterThanOrEqualTo(r => r.RentalDate)
+            .GreaterThanOrEqualTo(DateTime.Now)
             .WithMessage("Return date must be after rental date.");
         RuleFor(r => r.ActualReturnDate)
             .GreaterThanOrEqualTo(r => r.RentalDate)

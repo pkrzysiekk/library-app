@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Services;
 
+[Authorize]
 public class ClientController : Controller
 {
     private readonly IClientService _clientService;

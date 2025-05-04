@@ -7,6 +7,7 @@ using Wypozyczalnia.Services;
 using Wypozyczalnia.Validators;
 using Mapster;
 using Wypozyczalnia.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Wypozyczalnia;
 
@@ -18,6 +19,20 @@ public class Program
 
         builder.Services.AddDbContext<LibraryContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = true;
+
+            // Zasady dotycz¹ce has³a:
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.SignIn.RequireConfirmedAccount = true;
+        })
+        .AddEntityFrameworkStores<LibraryContext>();
+
         // Add services to the container.
         builder.Services.AddControllersWithViews();
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -37,6 +52,8 @@ public class Program
         builder.Services.AddScoped<IValidator<RentalViewModel>, RentalValidator>();
 
         builder.Services.AddMapster();
+
+        builder.Services.AddRazorPages();
 
         MapsterConfig.RegisterMappings();
 
@@ -62,6 +79,8 @@ public class Program
         app.UseRouting();
 
         app.UseAuthorization();
+
+        app.MapRazorPages();
 
         app.MapControllerRoute(
             name: "default",

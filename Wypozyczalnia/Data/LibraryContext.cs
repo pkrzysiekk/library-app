@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Models;
 
 namespace Wypozyczalnia.Data;
 
-public class LibraryContext : DbContext
+public class LibraryContext : IdentityDbContext
 {
     public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
     {
@@ -16,6 +17,7 @@ public class LibraryContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Client>().ToTable("Client");
         modelBuilder.Entity<Book>().ToTable("Book");
         modelBuilder.Entity<Author>().ToTable("Author");

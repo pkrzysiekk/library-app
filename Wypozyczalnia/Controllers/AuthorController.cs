@@ -49,8 +49,7 @@ public class AuthorController : Controller
         {
             return NotFound();
         }
-        // var model = AuthorViewModel.ConvertToViewModel(author);
-        //var model = author.Adapt<AuthorViewModel>();
+
         var model = _mapper.Map<AuthorViewModel>(author);
         return View(model);
     }

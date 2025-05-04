@@ -8,6 +8,7 @@ using Wypozyczalnia.Validators;
 using Mapster;
 using Wypozyczalnia.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Wypozyczalnia;
 
@@ -54,6 +55,8 @@ public class Program
         builder.Services.AddMapster();
 
         builder.Services.AddRazorPages();
+
+        builder.Services.AddTransient<IEmailSender, CustomEmailSender>();
 
         MapsterConfig.RegisterMappings();
 

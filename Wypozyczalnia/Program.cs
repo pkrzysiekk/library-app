@@ -25,7 +25,7 @@ public class Program
         {
             options.SignIn.RequireConfirmedAccount = true;
 
-            // Zasady dotycz¹ce has³a:
+            // password rules:
             options.Password.RequireDigit = false;
             options.Password.RequireLowercase = true;
             options.Password.RequireUppercase = false;

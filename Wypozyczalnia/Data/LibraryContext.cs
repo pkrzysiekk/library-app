@@ -18,6 +18,7 @@ public class LibraryContext : IdentityDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Client>().ToTable("Client");
         modelBuilder.Entity<Book>().ToTable("Book");
         modelBuilder.Entity<Author>().ToTable("Author");

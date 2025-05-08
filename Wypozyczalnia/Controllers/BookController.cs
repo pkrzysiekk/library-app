@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Controllers;
 
+[Authorize]
 public class BookController : Controller
 {
     private readonly IBookService _bookService;
@@ -15,6 +17,7 @@ public class BookController : Controller
         _authorService = authorService;
     }
 
+    [AllowAnonymous]
     public IActionResult Index()
     {
         var books = _bookService.GetAllBooks();

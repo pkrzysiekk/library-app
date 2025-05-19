@@ -9,7 +9,7 @@
             <tr>
                 <th>@Html.DisplayNameFor(Model => Model.Name)</th>
                 <th>@Html.DisplayNameFor(Model => Model.LastName)</th>
-                <th>Action</th>
+                <th class="text-end ps-5">Action</th>
             </tr>
         </thead>
         @foreach (var book in Model)
@@ -18,7 +18,7 @@
                 <td>@book.Name</td>
                 <td>@book.LastName</td>
 
-                <td>
+                <td class="d-flex justify-content-end gap-1">
                     <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@book.Id">Edit</a>
                     <form asp-action="Delete" method="post" class="d-inline">
                         @Html.AntiForgeryToken()

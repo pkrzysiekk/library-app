@@ -4,7 +4,7 @@ using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Services;
 
-[Authorize]
+[Authorize(Policy = "RequireElevatedPrivilleges")]
 public class ClientController : Controller
 {
     private readonly IClientService _clientService;

@@ -14,7 +14,7 @@ namespace Wypozyczalnia;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +32,14 @@ public class Program
             options.Password.RequireNonAlphanumeric = false;
             options.SignIn.RequireConfirmedAccount = true;
         })
+        .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<LibraryContext>();
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RequireElevatedPrivilleges",
+                policy => policy.RequireRole("Admin", "Manager"));
+        });
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
@@ -65,8 +72,18 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<LibraryContext>();
-
+            var serviceProvider = scope.ServiceProvider;
             LibraryContext.Initialize(context);
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            string[] roles = { "Admin", "User", "Manager" };
+
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
         }
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -81,6 +98,7 @@ public class Program
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapRazorPages();

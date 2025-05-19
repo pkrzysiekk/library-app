@@ -29,6 +29,7 @@ namespace Wypozyczalnia.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IConfiguration _config;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -43,6 +44,9 @@ namespace Wypozyczalnia.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
         }
 
         /// <summary>
@@ -99,7 +103,6 @@ namespace Wypozyczalnia.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -125,6 +128,13 @@ namespace Wypozyczalnia.Areas.Identity.Pages.Account
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                    var elevatedEmails = _config.GetSection("ElevatedEmailPermissions:Emails").Get<List<string>>();
+
+                    if (!await _userManager.IsInRoleAsync(user, "Admin") && elevatedEmails.Contains(Input.Email))
+                    {
+                        await _userManager.AddToRoleAsync(user, "Admin");
+                    }
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,

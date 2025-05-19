@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Models;
 
 namespace Wypozyczalnia.Data;
 
-public class LibraryContext : IdentityDbContext
+public class LibraryContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
     public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
     {

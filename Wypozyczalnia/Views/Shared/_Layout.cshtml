@@ -11,10 +11,10 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet" />
     <link href="css/sb-admin-2.min.css" rel="stylesheet" />
 </head>
-<body>
+<body >
 
     <header>
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <nav class="navbar navbar-expand navbar-light bg-white topbar  static-top shadow">
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown no-arrow">
@@ -36,10 +36,10 @@
         </nav>
     </header>
 
-    <div class="container-fluid ">
-        <div class="row">
+    <div class="container-fluid px-0">
+        <div class="row no-gutters">
             <!-- Sidebar -->
-            <nav class="col-md-3 col-lg-2 d-md-block bg-gradient-primary sidebar sidebar-dark collapse sticky-top">
+            <nav class="col-md-3 col-lg-2 d-md-block bg-gradient-primary sidebar sidebar-dark sticky-top">
                 <div class="sidebar-sticky pt-3">
                     <a class="sidebar-brand d-flex align-items-center justify-content-center mb-3" href="index.html">
                         <div class="sidebar-brand-icon rotate-n-15">
@@ -60,22 +60,7 @@
 
                         <hr class="sidebar-divider" />
 
-                        <div class="sidebar-heading text-white px-3 mt-3 mb-1">Interface</div>
-
-                        <li class="nav-item">
-                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                               aria-expanded="false" aria-controls="collapseTwo">
-                                <i class="fas fa-fw fa-cog"></i>
-                                Components
-                            </a>
-                            <div id="collapseTwo" class="collapse" data-parent="#accordionSidebar">
-                                <div class="bg-white py-2 collapse-inner rounded">
-                                    <h6 class="collapse-header">Custom Components:</h6>
-                                    <a class="collapse-item" href="buttons.html">Buttons</a>
-                                    <a class="collapse-item" href="cards.html">Cards</a>
-                                </div>
-                            </div>
-                        </li>
+                        
 
                         <li class="nav-item">
                             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
@@ -136,7 +121,7 @@
             </nav>
 
             <!-- Main content -->
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4">
+            <main role="main" class="col-md-9 col-lg-9 px-md-4 py-4">
                 @RenderBody()
                 <footer class="border-top footer text-muted mt-auto">
                     <div class="container">
@@ -146,8 +131,6 @@
             </main>
         </div>
     </div>
-
-
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

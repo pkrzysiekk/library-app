@@ -4,52 +4,45 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - UBB University</title>
-    <!-- jQuery -->
+
     <!-- jQuery z CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <!-- Bootstrap JS z CDN -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Bootstrap CSS z lokalnego folderu -->
+    <!-- Bootstrap CSS lokalnie -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
-
     <!-- Twoje CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Wypozyczalnia.styles.css" asp-append-version="true" />
-
     <!-- FontAwesome -->
     <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" asp-append-version="true" />
-
-    <!-- Google Fonts (bez zmian) -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet" />
-
     <!-- SB Admin CSS -->
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet" asp-append-version="true" />
 </head>
-<body >
+<body class="d-flex flex-column min-vh-100">
 
     <header>
-        <nav class="navbar navbar-expand navbar-light bg-white topbar  static-top shadow">
+        <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">@User.Identity.Name</span>
                             <img class="img-profile rounded-circle" src="@Url.Content("~/img/undraw_profile.svg")" />
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                        aria-labelledby="userDropdown">
+                             aria-labelledby="userDropdown">
                             <a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Profile</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>Settings</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>Activity Log</a>
                             <div class="dropdown-divider"></div>
-
-                            <!-- Użyj modala lub innego mechanizmu do potwierdzenia wylogowania -->
-                            <form asp-area="Identity" asp-page="/Account/Logout" method="post" id="logoutForm" style="display: none;"></form>
+                            <form asp-area="Identity" asp-page="/Account/Logout" method="post" id="logoutForm" style="display:none;"></form>
                             <a class="dropdown-item" href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Logout
                             </a>
@@ -59,71 +52,67 @@
                 else
                 {
                     <li class="nav-item">
-                        <a class="nav-link bg-gradient-primary" href="/Identity/Account/Login">Login</a>
+                        <a class="nav-link bg-gradient-primary text-white px-3 rounded" href="/Identity/Account/Login">Login</a>
                     </li>
                 }
-
-
-
             </ul>
         </nav>
     </header>
 
-    <div class="container-fluid px-0">
-        <div class="row no-gutters">
+    <div class="container-fluid px-0 flex-grow-1 d-flex">
+        <div class="row no-gutters flex-grow-1 w-100">
+
             @if (User.IsInRole("Admin"))
             {
                 <!-- Sidebar -->
                 <nav class="col-md-3 col-lg-2 d-md-block bg-gradient-primary sidebar sidebar-dark sticky-top">
                     <div class="sidebar-sticky pt-3">
-                    <a class="sidebar-brand d-flex align-items-center justify-content-center mb-3" href="index.html">
-                        <div class="sidebar-brand-icon rotate-n-15">
-                            <i class="fas fa-laugh-wink"></i>
-                        </div>
-                        <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
-                    </a>
-
-                    <hr class="sidebar-divider my-0" />
-
-                    <ul class="nav flex-column">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="index.html">
-                                <i class="fas fa-fw fa-tachometer-alt"></i>
-                                Dashboard
-                            </a>
-                        </li>
-
-                        <hr class="sidebar-divider" />
-
-                        
-
-                        <li class="nav-item">
-                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                               aria-expanded="false" aria-controls="collapseUtilities">
-                                <i class="fas fa-fw fa-wrench"></i>
-                                Utilities
-                            </a>
-                            <div id="collapseUtilities" class="collapse" data-parent="#accordionSidebar">
-                                <div class="bg-white py-2 collapse-inner rounded">
-                                    <h6 class="collapse-header">Custom Utilities:</h6>
-                                    <a class="collapse-item" href="utilities-color.html">Colors</a>
-                                    <a class="collapse-item" href="utilities-border.html">Borders</a>
-                                    <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                                    <a class="collapse-item" href="utilities-other.html">Other</a>
-                                </div>
+                        <a class="sidebar-brand d-flex align-items-center justify-content-center mb-3" href="index.html">
+                            <div class="sidebar-brand-icon rotate-n-15">
+                                <i class="fas fa-laugh-wink"></i>
                             </div>
-                        </li>
+                            <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                        </a>
 
-                        <hr class="sidebar-divider" />
+                        <hr class="sidebar-divider my-0" />
 
-                        <div class="sidebar-heading text-white px-3 mt-3 mb-1">Addons</div>
+                        <ul class="nav flex-column">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="index.html">
+                                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+
+                            <hr class="sidebar-divider" />
 
                             <li class="nav-item">
-                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+                                   aria-expanded="false" aria-controls="collapseUtilities">
+                                    <i class="fas fa-fw fa-wrench"></i>
+                                    Utilities
+                                </a>
+                                <div id="collapseUtilities" class="collapse" data-parent="#accordionSidebar">
+                                    <div class="bg-white py-2 collapse-inner rounded">
+                                        <h6 class="collapse-header">Custom Utilities:</h6>
+                                        <a class="collapse-item" href="utilities-color.html">Colors</a>
+                                        <a class="collapse-item" href="utilities-border.html">Borders</a>
+                                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
+                                        <a class="collapse-item" href="utilities-other.html">Other</a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <hr class="sidebar-divider" />
+
+                            <div class="sidebar-heading text-white px-3 mt-3 mb-1">Addons</div>
+
+                            <li class="nav-item">
+                                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                                     <i class="fas fa-fw fa-folder"></i>
                                     Pages
                                 </a>
-                                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-bs-parent="#accordionSidebar">
+                                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                                     <div class="bg-white py-2 collapse-inner rounded">
                                         <a class="collapse-item" asp-controller="Book" asp-action="Index">Books</a>
                                         <a class="collapse-item" asp-controller="Client" asp-action="Index">Clients</a>
@@ -133,40 +122,46 @@
                                 </div>
                             </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="charts.html">
-                                <i class="fas fa-fw fa-chart-area"></i>
-                                Charts
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="charts.html">
+                                    <i class="fas fa-fw fa-chart-area"></i>
+                                    Charts
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="tables.html">
-                                <i class="fas fa-fw fa-table"></i>
-                                Tables
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+                            <li class="nav-item">
+                                <a class="nav-link" href="tables.html">
+                                    <i class="fas fa-fw fa-table"></i>
+                                    Tables
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
             }
 
-            <!-- Main content -->
-            <main role="main" class="col-md-9 col-lg-9 px-md-4 py-4">
-                @RenderBody()
-                <footer class="border-top footer text-muted mt-auto">
-                    <div class="container">
-                        &copy; 2025 - UBB University - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </div>
+            @* Main content area *@
+            @{
+                var mainClass = User.IsInRole("Admin")
+                ? "col-md-9 d-flex flex-column"
+                : "col-12 d-flex flex-column mx-auto";
+                var mainStyle = User.IsInRole("Admin") ? "" : "max-width: 960px;";
+            }
+            <main class="@mainClass" style="@mainStyle">
+                <div class="flex-grow-1 overflow-auto px-3 py-4">
+                    @RenderBody()
+                </div>
+                <footer class="border-top text-center py-3">
+                    &copy; 2025 - UBB University - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </footer>
             </main>
         </div>
     </div>
 
+    <!-- Skrypty -->
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
 
     @await RenderSectionAsync("Scripts", required: false)
 

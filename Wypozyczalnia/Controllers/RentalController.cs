@@ -74,6 +74,7 @@ public class RentalController : Controller
             }
             return View(model);
         }
+        await _rentalService.UpdateRentalAsync(model);
         return RedirectToAction(nameof(Index));
     }
 

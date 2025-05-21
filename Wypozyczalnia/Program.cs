@@ -58,6 +58,7 @@ public class Program
         builder.Services.AddScoped<IRentalService, RentalService>();
 
         builder.Services.AddScoped<IValidator<RentalViewModel>, RentalValidator>();
+        builder.Services.AddScoped<IDashboardService, DashBoardService>();
 
         builder.Services.AddMapster();
 

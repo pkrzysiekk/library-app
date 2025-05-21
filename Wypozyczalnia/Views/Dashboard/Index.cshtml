@@ -8,7 +8,7 @@
     
 }
 @model Wypozyczalnia.Models.ViewModels.DashBoardViewModel
-
+    
 
 
 
@@ -114,9 +114,68 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 mb-4">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Users vs Books</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-pie pt-4 pb-2">
+                            <canvas id="usersBooksPieChart"></canvas>
+                        </div>
+                        <div class="mt-4 text-center small">
+                            <span class="mr-2">
+                                <i class="fas fa-circle text-primary"></i> Users
+                            </span>
+                            <span class="mr-2">
+                                <i class="fas fa-circle text-success"></i> Books
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
     </div>
 
 
 
 </div>
+@section Scripts {
+
+    <script>
+
+        const ctx = document.getElementById('usersBooksPieChart').getContext('2d');
+
+        // Tu możesz dynamicznie zaciągać dane z backendu – teraz przykładowe:
+        const userCount = @Model.UserCount;
+        const bookCount = @Model.BookCount;
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Users', 'Books'],
+                datasets: [{
+                    data: [userCount, bookCount],
+                    backgroundColor: ['#4e73df', '#1cc88a'],
+                    hoverBackgroundColor: ['#2e59d9', '#17a673'],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)"
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

@@ -65,7 +65,7 @@
             @if (User.IsInRole("Admin"))
             {
                 <!-- Sidebar -->
-                <nav class="col-md-3 col-lg-2 d-md-block bg-gradient-primary sidebar sidebar-dark sticky-top">
+                <nav id="accordionSidebar" class="col-md-3 col-lg-2 d-md-block bg-gradient-primary sidebar sidebar-dark sticky-top">
                     <div class="sidebar-sticky pt-3">
                         <a class="sidebar-brand d-flex align-items-center justify-content-center mb-3" href="index.html">
                             <div class="sidebar-brand-icon rotate-n-15">
@@ -118,6 +118,7 @@
                                         <a class="collapse-item" asp-controller="Client" asp-action="Index">Clients</a>
                                         <a class="collapse-item" asp-controller="Author" asp-action="Index">Authors</a>
                                         <a class="collapse-item" asp-controller="Rental" asp-action="Index">Rentals</a>
+                                        <a class="collapse-item" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                                     </div>
                                 </div>
                             </li>
@@ -145,7 +146,7 @@
                 var mainClass = User.IsInRole("Admin")
                 ? "col-md-9 d-flex flex-column"
                 : "col-12 d-flex flex-column mx-auto";
-                var mainStyle = User.IsInRole("Admin") ? "" : "max-width: 960px;";
+                var mainStyle = User.IsInRole("Admin") ? "" : "";
             }
             <main class="@mainClass" style="@mainStyle">
                 <div class="flex-grow-1 overflow-auto px-3 py-4">
@@ -162,6 +163,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" asp-append-version="true"></script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 

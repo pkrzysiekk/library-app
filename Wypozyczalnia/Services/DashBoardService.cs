@@ -10,7 +10,9 @@ public class DashBoardService : IDashboardService
     private IBookService _bookService;
     private UserManager<IdentityUser> _userManager;
 
-    public DashBoardService(IRentalRepository rentalRepository, IBookService bookService, UserManager<IdentityUser> userManager)
+    public DashBoardService(IRentalRepository rentalRepository,
+        IBookService bookService,
+        UserManager<IdentityUser> userManager)
     {
         _rentalRepository = rentalRepository;
         _bookService = bookService;
@@ -19,17 +21,12 @@ public class DashBoardService : IDashboardService
 
     public DashBoardViewModel GetAllStatistics()
     {
-        int rentalCount = GetRentalCount();
-        double sales = GetSales();
-        int userCount = GetUserCount();
-        int bookCount = GetBookCount();
-
         return new DashBoardViewModel()
         {
-            RentalCount = rentalCount,
-            RentalSales = sales,
-            UserCount = userCount,
-            BookCount = bookCount,
+            RentalCount = GetRentalCount(),
+            RentalSales = GetSales(),
+            UserCount = GetUserCount(),
+            BookCount = GetBookCount(),
         };
     }
 

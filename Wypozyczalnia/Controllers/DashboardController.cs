@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Controllers;
 
+[Authorize(Policy = "RequireElevatedPrivilleges")]
 public class DashboardController : Controller
 {
     private readonly IDashboardService _dashboardService;

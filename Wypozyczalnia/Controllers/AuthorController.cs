@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
@@ -7,6 +8,7 @@ using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Controllers;
 
+[Authorize(Policy = "RequireElevatedPrivilleges")]
 public class AuthorController : Controller
 {
     private IAuthorService _authorService;

@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - UBB University</title>
 
-    <!-- jQuery z CDN -->
+    <!-- jQuery CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap JS z CDN -->
+    <!-- Bootstrap JS CDN -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Bootstrap CSS lokalnie -->
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
-    <!-- Twoje CSS -->
+    <!-- Site CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Wypozyczalnia.styles.css" asp-append-version="true" />
     <!-- FontAwesome -->
@@ -21,6 +21,11 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet" />
     <!-- SB Admin CSS -->
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet" asp-append-version="true" />
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" asp-append-version="true"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -159,11 +164,7 @@
         </div>
     </div>
 
-    <!-- Skrypty -->
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" asp-append-version="true"></script>
+
 
 
     @await RenderSectionAsync("Scripts", required: false)

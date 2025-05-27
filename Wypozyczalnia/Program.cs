@@ -9,6 +9,9 @@ using Mapster;
 using Wypozyczalnia.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace Wypozyczalnia;
 
@@ -42,7 +45,24 @@ public class Program
         });
 
         // Add services to the container.
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllersWithViews()
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
+
+        builder.Services.AddLocalization(options =>
+        {
+            options.ResourcesPath = "Resources";
+        });
+
+        builder.Services.Configure<RequestLocalizationOptions>(options =>
+        {
+            var SupportedCultures = new[] {
+                new CultureInfo("pl-PL"),
+                new CultureInfo("en-US"),
+            };
+            options.DefaultRequestCulture = new RequestCulture("en-US");
+            options.SupportedCultures = SupportedCultures;
+            options.SupportedUICultures = SupportedCultures;
+        });
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
@@ -69,6 +89,7 @@ public class Program
         MapsterConfig.RegisterMappings();
 
         var app = builder.Build();
+        app.UseRequestLocalization();
 
         using (var scope = app.Services.CreateScope())
         {

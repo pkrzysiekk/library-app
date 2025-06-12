@@ -121,7 +121,7 @@
     <value>Przeglądaj książki</value>
   </data>
   <data name="WelcomeHeader" xml:space="preserve">
-    <value>Witaj na stronie naszej biblioteki!</value>
+    <value>Witaj</value>
   </data>
   <data name="WelcomeSubtitle" xml:space="preserve">
     <value>Witaj, {0} zobacz na naszą oferte książek!
@@ -129,6 +129,6 @@
 </value>
   </data>
   <data name="WelcomeTitle" xml:space="preserve">
-    <value>Witaj</value>
+    <value>Witaj na stronie naszej biblioteki!</value>
   </data>
 </root>

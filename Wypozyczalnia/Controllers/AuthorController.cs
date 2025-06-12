@@ -8,7 +8,7 @@ using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Controllers;
 
-[Authorize(Policy = "RequireElevatedPrivilleges")]
+//[Authorize(Policy = "RequireElevatedPrivilleges")]
 public class AuthorController : Controller
 {
     private IAuthorService _authorService;

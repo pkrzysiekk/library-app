@@ -14,9 +14,9 @@ public class DashboardController : Controller
         _dashboardService = dashboardService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var model = _dashboardService.GetAllStatistics();
+        var model = await _dashboardService.GetAllStatistics();
         return View(model);
     }
 }

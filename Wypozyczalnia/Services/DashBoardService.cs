@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
 
@@ -19,14 +20,16 @@ public class DashBoardService : IDashboardService
         _userManager = userManager;
     }
 
-    public DashBoardViewModel GetAllStatistics()
+    public async Task<DashBoardViewModel> GetAllStatistics()
     {
+        var users = await GetUsers();
         return new DashBoardViewModel()
         {
             RentalCount = GetRentalCount(),
             RentalSales = GetSales(),
             UserCount = GetUserCount(),
             BookCount = GetBookCount(),
+            users = users
         };
     }
 
@@ -49,5 +52,11 @@ public class DashBoardService : IDashboardService
     public int GetBookCount()
     {
         return _bookService.GetAllBooks().Count();
+    }
+    public async Task<IEnumerable<IdentityUser>> GetUsers()
+    {
+        var users =await _userManager.Users.ToListAsync();
+        return users;
+
     }
 }

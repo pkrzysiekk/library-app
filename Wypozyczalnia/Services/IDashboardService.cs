@@ -4,7 +4,7 @@ namespace Wypozyczalnia.Services;
 
 public interface IDashboardService
 {
-    public DashBoardViewModel GetAllStatistics();
+    public Task<DashBoardViewModel> GetAllStatistics();
 
     public int GetUserCount();
 

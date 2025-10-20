@@ -1,4 +1,6 @@
-﻿namespace Wypozyczalnia.Models.ViewModels;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Wypozyczalnia.Models.ViewModels;
 
 public class DashBoardViewModel
 {
@@ -6,4 +8,5 @@ public class DashBoardViewModel
     public double RentalSales;
     public int RentalCount;
     public int BookCount;
+    public IEnumerable<IdentityUser> users = [];
 }

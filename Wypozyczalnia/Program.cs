@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using Wypozyczalnia.Validators.Password;
 
 namespace Wypozyczalnia;
 
@@ -35,8 +36,10 @@ public class Program
             options.Password.RequireNonAlphanumeric = false;
             options.SignIn.RequireConfirmedAccount = true;
         })
+        .AddPasswordValidator<AllCharactersUniqueValidator<IdentityUser>>()
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<LibraryContext>();
+
 
         builder.Services.AddAuthorization(options =>
         {

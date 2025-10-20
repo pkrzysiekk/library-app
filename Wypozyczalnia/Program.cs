@@ -82,6 +82,12 @@ public class Program
 
         builder.Services.AddScoped<IValidator<RentalViewModel>, RentalValidator>();
         builder.Services.AddScoped<IDashboardService, DashBoardService>();
+        builder.Services.Configure<IdentityOptions>(options =>
+        {
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+
+        });
 
         builder.Services.AddMapster();
 

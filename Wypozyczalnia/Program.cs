@@ -82,6 +82,7 @@ public class Program
 
         builder.Services.AddScoped<IValidator<RentalViewModel>, RentalValidator>();
         builder.Services.AddScoped<IDashboardService, DashBoardService>();
+        builder.Services.AddScoped<IAuthService,AuthService>();
         builder.Services.Configure<IdentityOptions>(options =>
         {
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
@@ -106,7 +107,7 @@ public class Program
             var serviceProvider = scope.ServiceProvider;
             LibraryContext.Initialize(context);
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roles = { "Admin", "User", "Manager" };
+            string[] roles = { "Admin", "User", "Manager","SuperUser" };
 
             foreach (var role in roles)
             {

@@ -15,6 +15,7 @@ public class LibraryContext : IdentityDbContext<IdentityUser, IdentityRole, stri
     public DbSet<Book> Books { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<Rental> Rentals { get; set; }
+    public DbSet<UserOneTimePassword> UserOneTimePasswords { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

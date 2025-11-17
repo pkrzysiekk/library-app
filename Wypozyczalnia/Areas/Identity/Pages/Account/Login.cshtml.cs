@@ -14,18 +14,25 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Wypozyczalnia.Services;
 
 namespace Wypozyczalnia.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IAuthService _authService; 
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel
+            (SignInManager<IdentityUser> signInManager,
+            ILogger<LoginModel> logger,IAuthService authService,UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _authService = authService;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -111,6 +118,18 @@ namespace Wypozyczalnia.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+                var authOtp= await _authService.GetUserOtp(user.Id);
+                if (authOtp!= null)
+                {
+                    if (authOtp.OneTimePassword == Input.Password)
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        await _authService.RemoveOTP(user.Id);
+                        return LocalRedirect(returnUrl);
+                    }
+
+                }
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {

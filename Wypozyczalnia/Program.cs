@@ -80,6 +80,8 @@ public class Program
         builder.Services.AddScoped<IRentalRepository, RentalRepository>();
         builder.Services.AddScoped<IRentalService, RentalService>();
 
+        builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
         builder.Services.AddScoped<IValidator<RentalViewModel>, RentalValidator>();
         builder.Services.AddScoped<IDashboardService, DashBoardService>();
         builder.Services.AddScoped<IAuthService,AuthService>();

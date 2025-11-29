@@ -1,17 +1,17 @@
+using System.Globalization;
 using FluentValidation;
+using Mapster;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Wypozyczalnia.Data;
+using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
 using Wypozyczalnia.Services;
 using Wypozyczalnia.Validators;
-using Mapster;
-using Wypozyczalnia.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc.Razor;
-using System.Globalization;
-using Microsoft.AspNetCore.Localization;
 using Wypozyczalnia.Validators.Password;
 
 namespace Wypozyczalnia;
@@ -39,7 +39,6 @@ public class Program
         .AddPasswordValidator<AllCharactersUniqueValidator<IdentityUser>>()
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<LibraryContext>();
-
 
         builder.Services.AddAuthorization(options =>
         {
@@ -84,13 +83,13 @@ public class Program
 
         builder.Services.AddScoped<IValidator<RentalViewModel>, RentalValidator>();
         builder.Services.AddScoped<IDashboardService, DashBoardService>();
-        builder.Services.AddScoped<IAuthService,AuthService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.Configure<IdentityOptions>(options =>
         {
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             options.Lockout.MaxFailedAccessAttempts = 5;
-
         });
+        builder.Services.AddSession();
 
         builder.Services.AddMapster();
 
@@ -102,6 +101,7 @@ public class Program
 
         var app = builder.Build();
         app.UseRequestLocalization();
+        app.UseSession();
 
         using (var scope = app.Services.CreateScope())
         {
@@ -109,7 +109,7 @@ public class Program
             var serviceProvider = scope.ServiceProvider;
             LibraryContext.Initialize(context);
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roles = { "Admin", "User", "Manager","SuperUser" };
+            string[] roles = { "Admin", "User", "Manager", "SuperUser" };
 
             foreach (var role in roles)
             {

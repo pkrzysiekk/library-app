@@ -13,6 +13,7 @@ using Wypozyczalnia.Repository;
 using Wypozyczalnia.Services;
 using Wypozyczalnia.Validators;
 using Wypozyczalnia.Validators.Password;
+using Wypozyczalnia.Validators.reCAPTCHA;
 
 namespace Wypozyczalnia;
 
@@ -39,6 +40,9 @@ public class Program
         .AddPasswordValidator<AllCharactersUniqueValidator<IdentityUser>>()
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<LibraryContext>();
+
+        builder.Services.Configure<ReCaptchaSettings>(builder.Configuration.GetSection("GoogleReCaptcha"));
+        builder.Services.AddTransient<ReCaptchaValidator>();
 
         builder.Services.AddAuthorization(options =>
         {

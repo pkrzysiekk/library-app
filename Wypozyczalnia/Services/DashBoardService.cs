@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Repository;
 
@@ -32,6 +33,63 @@ public class DashBoardService : IDashboardService
             users = users
         };
     }
+    public async Task<string> GetStatisticsAsString()
+    {
+        var statistics = await GetAllStatistics();
+        var sb = new StringBuilder();
+        foreach(var user in statistics.users)
+        {
+            sb.AppendLine($"${user.UserName} ${user.Email}");
+        }
+        return sb.ToString();       
+    }
+    public async Task <string> GetEncryptedStatistics()
+    {
+        var statistics = await GetStatisticsAsString();
+        var encrypted = EncryptString(statistics);
+        return encrypted;
+    }
+    private string EncryptString(string toEncrypt)
+    {
+        int shift = 3;
+        char[] buffer = toEncrypt.ToCharArray();
+
+        for (int i = 0; i < buffer.Length; i++)
+        {
+            char c = buffer[i];
+
+            if (char.IsLetter(c))
+            {
+                char a = char.IsUpper(c) ? 'A' : 'a';
+                c = (char)(((c - a + shift) % 26) + a);
+            }
+
+            buffer[i] = c;
+        }
+
+        return new string(buffer);
+    }
+    private string DecryptString(string toDecrypt)
+    {
+        int shift = 3;
+        char[] buffer = toDecrypt.ToCharArray();
+
+        for (int i = 0; i < buffer.Length; i++)
+        {
+            char c = buffer[i];
+
+            if (char.IsLetter(c))
+            {
+                char a = char.IsUpper(c) ? 'A' : 'a';
+                c = (char)(((c - a - shift + 26) % 26) + a);
+            }
+
+            buffer[i] = c;
+        }
+
+        return new string(buffer);
+    }
+
 
     public int GetRentalCount()
     {

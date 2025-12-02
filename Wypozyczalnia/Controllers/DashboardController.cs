@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Wypozyczalnia.Models;
 using Wypozyczalnia.Models.ViewModels;
 using Wypozyczalnia.Services;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Wypozyczalnia.Controllers;
 
@@ -39,7 +40,25 @@ public class DashboardController : Controller
             User=user,
         };
         return View(model);
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetStatistics(string userName)
+    {
+        var user = await _userManager.FindByNameAsync(userName);
+        if (user ==null)
+            return NotFound();
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var requiredRole = userRoles.FirstOrDefault(role => role == "TrialAdmin");
+        bool isDemo =requiredRole == null;
+        string statistics;
+        if (isDemo)
+            statistics = await _dashboardService.GetEncryptedStatistics();
+        else
+            statistics = await _dashboardService.GetStatisticsAsString();
 
+        byte[] fileBytes = System.Text.Encoding.UTF8.GetBytes(statistics);
+
+        return File(fileBytes, "text/plain", "statistics.txt");
     }
     [HttpPost]
     public async Task<IActionResult> Edit(UserDashBoardViewModel viewModel)

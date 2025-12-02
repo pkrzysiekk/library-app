@@ -113,7 +113,7 @@ public class Program
             var serviceProvider = scope.ServiceProvider;
             LibraryContext.Initialize(context);
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roles = { "Admin", "User", "Manager", "SuperUser" };
+            string[] roles = { "Admin", "User", "Manager", "SuperUser","TrialAdmin" };
 
             foreach (var role in roles)
             {
